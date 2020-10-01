@@ -13,6 +13,8 @@ do
     if ! git branch --no-merged | grep -w $BRANCH >/dev/null
     then
       git branch -D $BRANCH
+    else
+      skipping $BRANCH not merged
     fi
 done
 
