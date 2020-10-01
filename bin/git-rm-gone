@@ -8,11 +8,11 @@ fi
 
 git fetch -p  
 
-for BRANCH in $(git branch -vv | grep gone | awk '{print $1}' )
+for BRANCH in $(git branch -vv | grep -w 'gone]' | awk '{print $1}' )
 do
     if ! git branch --no-merged | grep -w $BRANCH >/dev/null
     then
-      git branch -D $BRANCH
+      echo git branch -D $BRANCH
     else
       echo skipping $BRANCH not merged
     fi
