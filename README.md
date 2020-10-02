@@ -18,3 +18,4 @@ Add the following to your ~/.bash_profile or .profile
 ```
 eval $(<PATH_TO_REPO>/etc/bash-init)
 ```
+
