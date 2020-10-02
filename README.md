@@ -8,13 +8,13 @@ git clone https://github.com/daringway/cli-tools.git
 ```
 
 ## fish 
-Add the following to your ~/.conf/fish/config.fish file
+Add the following to your ~/.confif/fish/config.fish file
 ```
-sourche <PATH_TO_REPO>/etc/rc.fish
+source <PATH_TO_REPO>/etc/rc.fish
 ```
 
 ## bash
 Add the following to your ~/.bash_profile or .profile
 ```
-sourche <PATH_TO_REPO>/etc/rc.bash
+source <PATH_TO_REPO>/etc/rc.bash
 ```
