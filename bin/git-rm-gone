@@ -14,7 +14,7 @@ do
     then
       git branch -D $BRANCH
     else
-      echo skipping $BRANCH not merged
+      echo not merged, skipping: git branch -D $BRANCH
     fi
 done
 
