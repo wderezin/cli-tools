@@ -16,5 +16,5 @@ source <PATH_TO_REPO>/etc/rc.fish
 ## bash
 Add the following to your ~/.bash_profile or .profile
 ```
-source <PATH_TO_REPO>/etc/rc.bash
+eval $(<PATH_TO_REPO>/etc/bash-init)
 ```

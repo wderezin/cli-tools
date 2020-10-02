@@ -1,2 +1,2 @@
 
-PATH=$(dirname $(dirname ${0}))/bin:$PATH
+PATH=${DARING_CLI_TOOLS_DIR}/bin:$PATH

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+CURRENT=${0}
+export DARING_CLI_TOOLS_DIR=$(cd $(dirname $CURRENT)/..; pwd)
+
+echo "export DARING_CLI_TOOLS_DIR=$DARING_CLI_TOOLS_DIR; source ${DARING_CLI_TOOLS_DIR}/etc/rc.bash"
