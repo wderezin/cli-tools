@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+kill -9 $(ps -aeo pid,comm   | grep /usr/libexec/pboard  | awk '{print $1}')

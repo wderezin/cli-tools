@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+BRANCH=$(git symbolic-ref HEAD 2> /dev/null | sed -e 's|^refs/heads/||')
+REPO=$(basename -s .git $(git remote get-url origin))
+git fetch
+
+if (( $(git rev-list --left-only --count origin/$BRANCH...$BRANCH) > 0 ))
+then
+  echo $REPO has new changes, is it time to pull?
+  git log --no-decorate HEAD..origin | egrep -v '^Author:|^Date:|^commit|^\s*$'
+fi
+
+if (( $(git rev-list --right-only --count origin/$BRANCH...$BRANCH) > 0 ))
+then
+  echo $REPO you have changes, is it time to commit and push?
+  git log --no-decorate origin..HEAD | egrep -v '^Author:|^Date:|^commit|^\s*$'
+fi
