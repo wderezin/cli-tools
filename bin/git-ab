@@ -1,15 +1,32 @@
 #!/usr/bin/env bash
 
+if [[ "$1" != "" ]]
+then
+  if ! cd $1 2>/dev/null
+  then
+    echo "$1 does not exist"
+    exit 1
+  fi
+fi
+
+if ! git symbolic-ref HEAD >/dev/null 2>&1
+then
+    echo "NOT IN GIT REPO"
+    exit 2
+fi
+
 BRANCH=$(git symbolic-ref HEAD 2> /dev/null | sed -e 's|^refs/heads/||')
 REPO=$(basename -s .git $(git remote get-url origin))
 git fetch
 
+# Check to see if branch is behind of origin
 if (( $(git rev-list --left-only --count origin/$BRANCH...$BRANCH) > 0 ))
 then
   echo $REPO has new changes, is it time to pull?
   git log --no-decorate HEAD..origin | egrep -v '^Author:|^Date:|^commit|^\s*$'
 fi
 
+# Check to see if branch is ahead of origin
 if (( $(git rev-list --right-only --count origin/$BRANCH...$BRANCH) > 0 ))
 then
   echo $REPO you have changes, is it time to commit and push?

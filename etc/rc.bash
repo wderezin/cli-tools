@@ -1,4 +1,4 @@
 
 PATH=${DARING_CLI_TOOLS_DIR}/bin:$PATH
 
-(cd $DARING_CLI_TOOLS_DIR; git-ud)
+git-ab $DARING_CLI_TOOLS_DIR
