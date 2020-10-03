@@ -6,8 +6,8 @@ for FUNCTION_DIR in $DARING_CLI_TOOLS_DIR/by_shell/fish/functions
 end
 
 for BIN_DIR in $DARING_CLI_TOOLS_DIR/by_os/(uname -s)/bin (_shell_bin_dirs)
-  echo checking $BIN_DIR x
   test -d $BIN_DIR; and ! contains $BIN_DIR $PATH; and set -p PATH $BIN_DIR; and echo set
 end
+
 
 withd $DARING_CLI_TOOLS_DIR git-abcheck
