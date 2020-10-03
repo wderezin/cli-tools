@@ -33,11 +33,11 @@ function add_line {
 
 if type bash >/dev/null 2>&1
 then
-  add_line ~/.bashrc "source \$(${DARING_CLI_TOOLS_DIR}/etc/bash-init)"
+  add_line ~/.bashrc "eval \"\$(${DARING_CLI_TOOLS_DIR}/etc/bash-init)\""
 fi
 
 if type zsh >/dev/null 2>&1
 then
-  add_line ~/.zshenv "source ${DARING_CLI_TOOLS_DIR}/etc/rc.zsh"
+  add_line ~/.zshenv "source \"${DARING_CLI_TOOLS_DIR}/etc/rc.zsh\""
 fi
 
