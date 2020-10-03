@@ -29,6 +29,6 @@ fi
 # Check to see if branch is ahead of origin
 if (( $(git rev-list --right-only --count origin/$BRANCH...$BRANCH) > 0 ))
 then
-  echo $REPO you have changes, is it time to commit and push?
+  echo $REPO has local changes, is it time to commit and push?
   git log --no-decorate origin..HEAD | egrep -v '^Author:|^Date:|^commit|^\s*$'
 fi
