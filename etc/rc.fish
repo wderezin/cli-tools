@@ -12,4 +12,4 @@ set OS_BIN $DARING_CLI_TOOLS_DIR/$OS_NAME/bin
 
 test -d $OS_BIN; and contains $OS_BIN $fish_user_paths; or set -p fish_user_paths $OS_BIN
 
-git-ab $DARING_CLI_TOOLS_DIR
+withd $DARING_CLI_TOOLS_DIR git-ab
