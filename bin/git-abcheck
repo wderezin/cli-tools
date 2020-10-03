@@ -10,16 +10,16 @@ BRANCH=$(git symbolic-ref HEAD 2> /dev/null | sed -e 's|^refs/heads/||')
 REPO=$(basename -s .git $(git remote get-url origin))
 git fetch
 
-# Check to see if branch is behind of origin
-if (( $(git rev-list --left-only --count origin/$BRANCH...$BRANCH) > 0 ))
-then
-  echo $REPO has new changes, is it time to pull?
-  git log --no-decorate HEAD..origin | egrep -v '^Author:|^Date:|^commit|fixup!|smash!|^\s*$' | uniq
-fi
-
 # Check to see if branch is ahead of origin
 if (( $(git rev-list --right-only --count origin/$BRANCH...$BRANCH) > 0 ))
 then
-  echo $REPO has local changes, is it time to commit and push?
+  echo "$REPO has local changes, it time for you to share (git push)."
   git log --no-decorate origin..HEAD | egrep -v '^Author:|^Date:|^commit|fixup!|smash!|^\s*$' | uniq
+fi
+
+# Check to see if branch is behind of origin
+if (( $(git rev-list --left-only --count origin/$BRANCH...$BRANCH) > 0 ))
+then
+  echo "$REPO has new updates, it is time for change. (git pull)"
+  git log --no-decorate HEAD..origin | egrep -v '^Author:|^Date:|^commit|fixup!|smash!|^\s*$' | uniq
 fi

@@ -1,15 +1,12 @@
 
 set DARING_CLI_TOOLS_DIR (dirname (dirname (realpath (status -f))))
 
-set DARING_FUNCTIONS_DIR $DARING_CLI_TOOLS_DIR/fish/functions
-contains $DARING_FUNCTIONS_DIR $fish_function_path; or set -p fish_function_path $DARING_FUNCTIONS_DIR
+for FUNCTION_DIR in $DARING_CLI_TOOLS_DIR/by_shell/fish/functions
+  test -d $FUNCTION_DIR; and contains $FUNCTION_DIR $fish_function_path; or set -p fish_function_path $FUNCTION_DIR
+end
 
-set DARING_CLI_BIN $DARING_CLI_TOOLS_DIR/bin
-contains $DARING_CLI_BIN $fish_user_paths; or set -p fish_user_paths $DARING_CLI_BIN
+for BIN_DIR in $DARING_CLI_TOOLS_DIR/by_os/(uname -s)/bin $DARING_CLI_TOOLS_DIR/bin
+  test -d $BIN_DIR; and contains $BIN_DIR $PATH; or set -p PATH $BIN_DIR
+end
 
-set OS_NAME (uname -s)
-set OS_BIN $DARING_CLI_TOOLS_DIR/$OS_NAME/bin
-
-test -d $OS_BIN; and contains $OS_BIN $fish_user_paths; or set -p fish_user_paths $OS_BIN
-
-withd $DARING_CLI_TOOLS_DIR git-ab
+withd $DARING_CLI_TOOLS_DIR git-abcheck
