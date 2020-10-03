@@ -24,9 +24,9 @@ function add_line {
   then
     touch $RCFILE
   fi
-  if ! grep cli-tools $RCFILE >/dev/null 2>&1
+  if ! grep daringway-cli-tools $RCFILE >/dev/null 2>&1
   then
-    echo $LINE >> $RCFILE
+    echo $LINE "# daringway-cli-tools" >> $RCFILE
     echo updated $RCFILE
   fi
 }
