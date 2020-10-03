@@ -23,12 +23,12 @@ git fetch
 if (( $(git rev-list --left-only --count origin/$BRANCH...$BRANCH) > 0 ))
 then
   echo $REPO has new changes, is it time to pull?
-  git log --no-decorate HEAD..origin | egrep -v '^Author:|^Date:|^commit|^\s*$' | grep -v fixup | uniq
+  git log --no-decorate HEAD..origin | egrep -v '^Author:|^Date:|^commit|fixup!|smash!|^\s*$' | uniq
 fi
 
 # Check to see if branch is ahead of origin
 if (( $(git rev-list --right-only --count origin/$BRANCH...$BRANCH) > 0 ))
 then
   echo $REPO has local changes, is it time to commit and push?
-  git log --no-decorate origin..HEAD | egrep -v '^Author:|^Date:|^commit|^\s*$' | grep -v fixup | uniq
+  git log --no-decorate origin..HEAD | egrep -v '^Author:|^Date:|^commit|fixup!|smash!|^\s*$' | uniq
 fi
