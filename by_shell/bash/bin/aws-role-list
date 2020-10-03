@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+ID=role
+FILE=~/.aws/roles
+
+if [[ $1 == "--values" ]]
+then
+    sed -n '1,/\['${ID}'[[:space:]]*'${2}'\]/d;/\[/,$d;s/[[:blank:]]*=[[:blank:]]*/=/g;/^\;/d;/^$/d;p' ${FILE}
+    exit $?
+fi
+
+GREP=cat
+[[ -n $1 ]] && GREP=" grep $1 "
+
+grep '\['${ID} $FILE 2>/dev/null | sed 's/.*\['${ID}'[[:space:]]*\([^]]*\)\].*/\1/g' | $GREP | sort
+
+

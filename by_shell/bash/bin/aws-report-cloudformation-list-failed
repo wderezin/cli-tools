@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+for STACK in $(aws cloudformation list-stacks | jq -r '.StackSummaries[] | [.StackId, .StackStatus] | @csv' | grep FAILED)
+do
+    NAME=$(echo $STACK | cut -d'/' -f2)
+    STATE=$(echo $STACK | cut -d, -f2 | cut -d\" -f2)
+    echo "cloudformation stack $NAME in state $STATE"
+done

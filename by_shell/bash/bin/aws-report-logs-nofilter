@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+FILTERNAME=${1-filterName}
+
+for LOG in $(aws logs describe-log-groups | grep logGroupName | cut  -d'"' -f4 )
+do
+    if ! aws logs describe-subscription-filters --log-group-name $LOG | grep filterName | grep $FILTERNAME >/dev/null
+    then
+        echo "cloudwatch log missing $FILTERNAME filter on $LOG"
+    fi
+done

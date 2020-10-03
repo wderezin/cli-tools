@@ -1,6 +1,6 @@
 
 function _shell_bin_dirs {
-  for SHELL in bash zsh fish
+  for SHELL in python2 python3 node bash zsh fish
   do
     if type $SHELL >/dev/null 2>&1
     then
