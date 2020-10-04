@@ -12,6 +12,10 @@ if type fish >/dev/null 2>&1
 then
   if ! test -e ~/.config/fish/conf.d/cli-tools.fish
   then
+    if ! test -d ~/.config/fish/conf.d
+    then
+      mkdir -p ~/.config/fish/conf.d
+    fi
     ln -s $DARING_CLI_TOOLS_DIR/etc/rc.fish ~/.config/fish/conf.d/cli-tools.fish
     echo Linked ~/.config/fish/conf.d/cli-tools.fish
   fi
