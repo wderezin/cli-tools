@@ -1,5 +1,5 @@
 
-function daily --description "Only run the command once per 24 hours"
+function daily-check --description "Only run the command once per 24 hours <CHECK VARIABLE> <COMMAND>"
   set -l DAY_IN_SECONDS 86400
   set CHECK_VAR $argv[1]
   set -e argv[1]

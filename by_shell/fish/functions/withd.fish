@@ -1,5 +1,5 @@
 
-function withd --description "Change to directory and run the command"
+function withd --description "Change to directory and run the command <DIRECTORY> <COMMMAND>"
   pushd $argv[1]; or return 2
   set -e argv[1]
 

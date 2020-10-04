@@ -17,8 +17,4 @@ do
   test -d $BIN_DIR && [[ ":$PATH:" != *":$BIN_DIR:"* ]] && PATH=$BIN_DIR:$PATH
 done
 
-
-
-
-
-(cd $DARING_CLI_TOOLS_DIR && git-abcheck || echo fail)
+(cd $DARING_CLI_TOOLS_DIR && git-abcheck &)

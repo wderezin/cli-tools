@@ -10,6 +10,8 @@ BRANCH=$(git symbolic-ref HEAD 2> /dev/null | sed -e 's|^refs/heads/||')
 REPO=$(basename -s .git $(git remote get-url origin))
 git fetch
 
+echo
+
 # Check to see if branch is ahead of origin
 if (( $(git rev-list --right-only --count origin/$BRANCH...$BRANCH) > 0 ))
 then
