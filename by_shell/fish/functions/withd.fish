@@ -1,5 +1,5 @@
 
-function withd
+function withd --description "Change to directory and run the command"
   if test -z $_WITHD_NEST
     pushd $argv[1]; or return 2
     set -e argv[1]
