@@ -37,11 +37,31 @@ function add_line {
 
 if type bash >/dev/null 2>&1
 then
-  add_line ~/.bashrc "eval \"\$(${DARING_CLI_TOOLS_DIR}/etc/bash-init)\""
+  RCFILE=~/.bashrc
+  LINE="eval \"\$(${DARING_CLI_TOOLS_DIR}/etc/bash-init)\""
+  if ! test -e $RCFILE
+  then
+    touch $RCFILE
+  fi
+  if ! grep daringway-cli-tools $RCFILE >/dev/null 2>&1
+  then
+    echo $LINE "# daringway-cli-tools" >> $RCFILE
+    echo updated $RCFILE
+  fi
 fi
 
 if type zsh >/dev/null 2>&1
 then
-  add_line ~/.zshenv "source \"${DARING_CLI_TOOLS_DIR}/etc/rc.zsh\""
+  RCFILE=~/.zshenv
+  LINE="source \"${DARING_CLI_TOOLS_DIR}/etc/rc.zsh\""
+  if ! test -e $RCFILE
+  then
+    touch $RCFILE
+  fi
+  if ! grep daringway-cli-tools $RCFILE >/dev/null 2>&1
+  then
+    echo $LINE "# daringway-cli-tools" >> $RCFILE
+    echo updated $RCFILE
+  fi
 fi
 
