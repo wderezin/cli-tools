@@ -13,4 +13,6 @@ for SHELL in (withd $DARING_CLI_TOOLS_DIR/by_shell command ls)
   end
 end
 
-daily-check DCT_LAST_CHECK "withd $DARING_CLI_TOOLS_DIR 'git-abcheck &'"
+if status --is-interactive
+  daily-check DCT_LAST_CHECK "withd $DARING_CLI_TOOLS_DIR git-abcheck"
+end

@@ -14,4 +14,8 @@ do
   test -d $BIN_DIR && [[ ":$PATH:" != *":$BIN_DIR:"* ]] && PATH=$BIN_DIR:$PATH
 done
 
-(cd $DARING_CLI_TOOLS_DIR && git-abcheck & )
+if ! shopt -q login_shell
+then
+  # interactive mode
+  (cd $DARING_CLI_TOOLS_DIR && git-abcheck)
+fi
