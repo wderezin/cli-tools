@@ -1,5 +1,12 @@
 
 # RoleARN needs to be AWS ARN:  "arn:aws:iam::999999999999:role/UpdateApp" --role-session-name "David-ProdUpdate"
+# Do script this in a loop
+#
+# for ARN in ARN1  ARN2 ARN3
+# do
+#   aws-assume-role $ARN
+#   aws commands
+# done
 
 function aws-assume-role {
     ROLE_ARN=$1
