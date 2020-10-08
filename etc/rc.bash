@@ -1,4 +1,10 @@
 
+# Load functions
+for FILE in $DARING_CLI_TOOLS_DIR/by_shell/bash/functions/*.bash
+do
+  source $FILE
+done
+
 function _shell_bin_dirs {
   for SHELL in $(cd $DARING_CLI_TOOLS_DIR/by_shell; ls)
   do
