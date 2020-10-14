@@ -20,7 +20,7 @@ do
   test -d $BIN_DIR && [[ ":$PATH:" != *":$BIN_DIR:"* ]] && PATH=$BIN_DIR:$PATH
 done
 
-if ! shopt -q interactive_comments
+if shopt -q interactive_comments
 then
   # interactive mode
   (cd $DARING_CLI_TOOLS_DIR && git-abcheck)
