@@ -5,10 +5,12 @@ for FUNCTION_DIR in $DARING_CLI_TOOLS_DIR/by_shell/fish/functions
 end
 
 # Add bin directories to PATH
-DIR=$DARING_CLI_TOOLS_DIR/by_os/(uname -s)/bin test -d DIR; and ! contains $DIR $PATH; and set -p PATH $DIR
+for DIR in $DARING_CLI_TOOLS_DIR/by_os/(uname -s)/bin
+  test -d $DIR; and ! contains $DIR PATH; and set -p PATH $DIR
+end
 
 for SHELL in (withd $DARING_CLI_TOOLS_DIR/by_shell command ls)
-  set DIR $DARING_CLI_TOOLS_DIR/by_shell/$SHELL/bin
+  set DIR$DARING_CLI_TOOLS_DIR/by_shell/$SHELL/bin
   if type $SHELL >/dev/null 2>&1; and test -d $DIR; and ! contains $DIR $PATH
     set -p PATH $DIR
   end
