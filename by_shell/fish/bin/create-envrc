@@ -1,0 +1,16 @@
+#!/usr/bin/env fish
+
+if test -f .envrc
+  set -l red (set_color red)
+  set -l normal (set_color normal)
+  echo -n -s $red 'Error: .envrc already exist, `rm .envrc` first' $normal
+  exit 1
+end
+
+for FILE in (ls .*-envrc 2>/dev/null)
+  echo "source_env_if_exists $FILE" >> .envrc
+end
+
+if test -f .envrc
+  echo "Created .envrc"
+end
