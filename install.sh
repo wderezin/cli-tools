@@ -66,9 +66,9 @@ then
 fi
 
 DIRENV_DIR=~/.config/direnv/lib
-if ! test -f $DIRENV_DIR/cli-tools.sh
+if ! test -f $DIRENV_DIR/cli-tgit ools.sh
 then
-  mkdir -p DIRENV_DIR 2>/dev/null
+  mkdir -p $DIRENV_DIR 2>/dev/null
   ln -s $DARING_CLI_TOOLS_DIR/direnv.sh $DIRENV_DIR/cli-tools.sh
 fi
 
