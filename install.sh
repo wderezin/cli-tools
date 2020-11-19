@@ -72,11 +72,33 @@ then
   ln -s $DARING_CLI_TOOLS_DIR/direnv.sh $DIRENV_DIR/cli-tools.sh
 fi
 
+function printWarning {
+  if [[ "${WARNING_PRINTED}" == "" ]]
+  then
+    WARNING_PRINTED=yes
+    echo "WARNING: not all applications and packages are installed for full cli-tools functionality"
+    echo "         install missing appllications and packages and run install.sh again"
+  fi
+  echo "   "$*
+}
+
 # Check if all the required applications are installed.
-for P in direnv env fish python3 sh jq git ssh mssh bash
+for P in direnv env fish python3 pip3 sh jq git ssh bash
 do
   if ! type $P >/dev/null 2>&1
   then
-    echo "WARNING:\"${P}\" not installed, install for full functionality"
+    printWarning  ""\"${P}\" not installed""
   fi
 done
+
+# Check for python libraries
+if type pip3 >/dev/null 2>&1
+then
+  for P in boto3 aws2-wrap ec2instanceconnectcli
+  do
+    if ! pip3 show $P >/dev/null 2>&1
+    then
+      printWarning "\"$P\" not installed, to install:  \"pip3 install ${P}\""
+    fi
+  done
+fi
