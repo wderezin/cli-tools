@@ -57,7 +57,6 @@ function fish_prompt
   end
   echo -n -s ' · ' $acc_info $normal
 
-
   set -l prompt_color $red
   if test $last_status = 0
     set prompt_color $normal

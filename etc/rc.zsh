@@ -10,4 +10,4 @@ then
   (cd $DARING_CLI_TOOLS_DIR && git-abcheck)
 fi
 
-eval $(direnv hook zsh)
+eval "$(direnv hook zsh)"
