@@ -25,6 +25,17 @@ function help {
     exit 1
 }
 
+function instanceInfo {
+  aws ec2 describe-instances --filters "Name=instance-id,Values=${1} " | jq -r '.Reservations[] | .Instances[] |
+      [ .InstanceId,
+        ([.Tags[] | select(.Key=="Name")] | if length > 0 then (.[] | .Value) else "No-Name" end),
+        if has("PublicIpAddress") then .PrivateIpAddress else "No-PrivateIpAddress" end,
+        if has("PublicIpAddress") then .PublicIpAddress  else "No-PublicIpAddress"  end,
+        if has("KeyName") then .KeyName  else "No-KeyName"  end,
+        ([.Tags[] | select(.Key=="SSHUSER")] | if length > 0 then (.[] | .Value) else "No-SSHUSER" end)
+      ]  | @tsv '
+}
+
 KEYDIRS=$(echo . ~/.aws/keys ~/.ssh)
 SSHGETOPTS="1246AaCfGgKkMNnqsTtVvXxYyb:c:D:E:e:F:I:i:L:l:m:O:o:p:Q:R:S:W:w:"
 
@@ -90,10 +101,12 @@ fi
 
 # we have a index (number) so lookup hostname.
 INSTANCE_ID=$(echo ${LIST[$where]} | cut -d' ' -f1)
-PRIVATE_DEST=$(echo ${LIST[$where]} | cut -d' ' -f3)
-PUBLIC_DEST=$(echo ${LIST[$where]} | cut -d' ' -f4)
-PEM=$(echo ${LIST[$where]} | cut -d' ' -f5)
-SSHUSER=$(echo ${LIST[$where]} | cut -d' ' -f6)
+INSTANCE_INFO=$(instanceInfo $INSTANCE_ID)
+
+PRIVATE_DEST=$(echo ${INSTANCE_INFO} | cut -d' ' -f3)
+PUBLIC_DEST=$(echo ${INSTANCE_INFO} | cut -d' ' -f4)
+PEM=$(echo ${INSTANCE_INFO} | cut -d' ' -f5)
+SSHUSER=$(echo ${INSTANCE_INFO} | cut -d' ' -f6)
 
 if [[ "${SUER}" == "" ]]
 then

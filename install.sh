@@ -72,10 +72,10 @@ then
   ln -s $DARING_CLI_TOOLS_DIR/direnv.sh $DIRENV_DIR/cli-tools.sh
 fi
 
-for P in fish python2 sh
+for P in dir env fish python3 sh jq git ssh mssh bash
 do
   if ! type $P >/dev/null 2>&1
   then
-    echo "WARNING: install \"${P}\" to ensure full functionality"
+    echo "WARNING:\"${P}\" not installed, install for full functionality"
   fi
 done

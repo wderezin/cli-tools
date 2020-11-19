@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 import boto3
 import sys
@@ -29,4 +29,4 @@ def getKey(array, key):
 for r in response['Reservations']:
     for i in r['Instances']:
         if (find == None) or (find.lower() in str(i).lower()):
-            print i['InstanceId'], getTag('Name', i['Tags']), getKey(i, 'PrivateIpAddress'), getKey(i, 'PublicIpAddress'), getKey(i, 'KeyName'), getTag('SSHUSER', i['Tags'])
+            print(i['InstanceId'], getTag('Name', i['Tags']), getKey(i, 'PrivateIpAddress'), getKey(i, 'PublicIpAddress'))
