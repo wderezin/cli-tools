@@ -72,7 +72,8 @@ then
   ln -s $DARING_CLI_TOOLS_DIR/direnv.sh $DIRENV_DIR/cli-tools.sh
 fi
 
-for P in dir env fish python3 sh jq git ssh mssh bash
+# Check if all the required applications are installed.
+for P in direnv env fish python3 sh jq git ssh mssh bash
 do
   if ! type $P >/dev/null 2>&1
   then
