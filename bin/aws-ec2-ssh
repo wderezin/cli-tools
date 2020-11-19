@@ -1,0 +1,156 @@
+#!/bin/bash
+
+# Created by Walter Derezinski
+
+function help {
+    cat <<%EOF%
+
+  Assist with SSH to AWS EC2 Instances.
+
+  1) Display list of EC2 Instances
+  2) Look up the Key Pair for the EC2 instance.
+  3) Check for Key Pair in the ~/.aws/keys in this order
+       keyname+aws-account-name.pem
+       keyname.pem
+
+  Default user is ec2-user
+
+  # ${0##*/} -z [ssh-standard-options] [[login]@search-pattern]
+
+     login: optional login name to use besides ec2-user
+     search-pattern: Will limit list to any EC2 meta data that matches the search pattern
+     -z show options being used for ssh
+
+%EOF%
+    exit 1
+}
+
+KEYDIRS=$(echo . ~/.aws/keys ~/.ssh)
+SSHGETOPTS="1246AaCfGgKkMNnqsTtVvXxYyb:c:D:E:e:F:I:i:L:l:m:O:o:p:Q:R:S:W:w:"
+
+declare -a arr
+arr=($@)
+
+while getopts ${SSHGETOPTS}hz opt
+do
+    case $opt in
+        h|\?)
+            help
+        ;;
+        z)
+            arr[$((OPTIND-2))]=""
+            VERBOSE=1
+        ;;
+    esac
+done
+
+DEST=${arr[$((OPTIND-1))]}
+
+# Defaults
+SUSER=""
+
+# Remove the optional user and path
+if [[ "$DEST" == *@* ]]
+then
+    SUSER="${DEST%@*}@"
+    DEST=${DEST##*@}
+fi
+if [[ $DEST == *:* ]]
+then
+    SPATH=":${DEST##*:}"
+    DEST=${DEST%:*}
+fi
+
+# find DEST
+oldIFS="$IFS"
+IFS=$'\n\b'
+declare -a LIST=( $(aws-ec2-list $DEST) )
+IFS="${oldIFS}"
+
+if (( ${#LIST[@]} == 0 ))
+then
+    echo "ERROR: No matching EC2 instance" 1>&2
+    exit 1
+elif (( ${#LIST[@]} == 1 ))
+then
+        where=0
+else
+    i=0
+    while (( $i < ${#LIST[@]} ))
+    do
+            echo $i: ${LIST[$i]}
+            i=$(( $i + 1))
+    done
+    while [[ ! "$where" =~ ^[0-9]+$ ]]
+    do
+        echo -n "goto (0-$((${#LIST[@]}-1)))? "
+        read where
+    done
+fi
+
+# we have a index (number) so lookup hostname.
+INSTANCE_ID=$(echo ${LIST[$where]} | cut -d' ' -f1)
+PRIVATE_DEST=$(echo ${LIST[$where]} | cut -d' ' -f3)
+PUBLIC_DEST=$(echo ${LIST[$where]} | cut -d' ' -f4)
+PEM=$(echo ${LIST[$where]} | cut -d' ' -f5)
+SSHUSER=$(echo ${LIST[$where]} | cut -d' ' -f6)
+
+if [[ "${SUER}" == "" ]]
+then
+  if [[ "${SSHUSER}" == "No-SSHUSER" ]]
+  then
+    SUSER="ec2-user@"
+  else
+    SUSER="${SSHUSER}@"
+  fi
+fi
+
+if [[ "${PEM}" == "No-KeyName" ]]
+then
+  DEST=$(echo ${LIST[$where]} | cut -d' ' -f1)
+
+  if (( $VERBOSE ))
+  then
+    echo SSH-OPTIONS ${arr[*]} ${DEST}
+  fi
+
+  arr[$((OPTIND-1))]="${SUSER}${INSTANCE_ID}${SPATH}"
+  mssh -o ConnectTimeout=2 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  ${arr[*]}
+  exit $?
+fi
+
+for KEYDIR in $KEYDIRS
+do
+    if [ -f "${KEYDIR}/${PEM}+${AWS_DEFAULT_PROFILE}.pem" ]
+    then
+        PEMOPT=" -i ${KEYDIR}/${PEM}+${AWS_DEFAULT_PROFILE}.pem "
+        break
+    elif [ -f "${KEYDIR}/${PEM}.pem" ]
+    then
+        PEMOPT=" -i ${KEYDIR}/${PEM}.pem "
+        break
+    fi
+done
+
+if (( $VERBOSE ))
+then
+	echo SSH-OPTIONS $PEMOPT ${arr[*]}
+fi
+
+if [[ $PRIVATE_DEST == "No-PrivateIpAddress" ]]
+then
+    RC=255
+else
+    arr[$((OPTIND-1))]="${SUSER}${PRIVATE_DEST}${SPATH}"
+    ssh $PEMOPT -o ConnectTimeout=2 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${arr[*]}
+    RC=$?
+fi
+
+if (( $RC != 255 ))
+then
+    exit $RC
+fi
+
+arr[$((OPTIND-1))]="${SUSER}${PUBLIC_DEST}${SPATH}"
+echo ssh $PEMOPT -o ConnectTimeout=2 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${arr[*]}
+ssh $PEMOPT -o ConnectTimeout=2 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${arr[*]}

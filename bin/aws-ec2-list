@@ -1,0 +1,32 @@
+#!/usr/bin/env python2
+
+import boto3
+import sys
+
+find = None
+if len(sys.argv) > 1:
+    find = sys.argv[1]
+
+client = boto3.client('ec2')
+
+RunFilter = [ { 'Name': 'instance-state-name', 'Values': ['running']}]
+
+response = client.describe_instances(Filters = RunFilter)
+
+def getTag(key, tags):
+    for i in tags:
+        if i['Key'] == key:
+            return i['Value'].replace(' ', '-')
+    return "No-" + key
+
+def getKey(array, key):
+    try:
+        return array[key]
+    except KeyError:
+        return "No-" + key
+
+
+for r in response['Reservations']:
+    for i in r['Instances']:
+        if (find == None) or (find.lower() in str(i).lower()):
+            print i['InstanceId'], getTag('Name', i['Tags']), getKey(i, 'PrivateIpAddress'), getKey(i, 'PublicIpAddress'), getKey(i, 'KeyName'), getTag('SSHUSER', i['Tags'])

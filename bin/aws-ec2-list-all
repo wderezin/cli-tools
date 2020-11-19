@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# Working on replacing aws-ec2-list to remove python requirements.
+
+aws ec2 describe-instances --filters "Name=instance-state-name,Values=running " | jq -r '.Reservations[] | .Instances[] |
+    [ .InstanceId,
+      ([.Tags[] | select(.Key=="Name")] | if length > 0 then (.[] | .Value) else "No-Name" end),
+      if has("PublicIpAddress") then .PrivateIpAddress else "No-PrivateIpAddress" end,
+      if has("PublicIpAddress") then .PublicIpAddress  else "No-PublicIpAddress"  end,
+      if has("KeyName") then .KeyName  else "No-KeyName"  end,
+      ([.Tags[] | select(.Key=="SSHUSER")] | if length > 0 then (.[] | .Value) else "No-SSHUSER" end)
+    ]  | @tsv '
+
+
+
