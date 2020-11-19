@@ -50,6 +50,14 @@ function fish_prompt
     echo -n -s ' · ' $git_info $normal
   end
 
+  if set -q AWS_PROFILE
+    set acc_info '[AWS:' $green $AWS_PROFILE $normal ']'
+  else
+    set acc_info '[]'
+  end
+  echo -n -s ' · ' $acc_info $normal
+
+
   set -l prompt_color $red
   if test $last_status = 0
     set prompt_color $normal

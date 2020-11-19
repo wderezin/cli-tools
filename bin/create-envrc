@@ -8,7 +8,7 @@ if test -f .envrc
 end
 
 for FILE in (ls .*-envrc 2>/dev/null)
-  echo "source_env_if_exists $FILE" >> .envrc
+  echo "source_env $FILE" >> .envrc
 end
 
 if test -f .envrc
