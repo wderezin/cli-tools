@@ -4,7 +4,7 @@
 # and if a any .*-envrc exist
 # then create a .envrc to source the .*-envrc
 
-# ~/.config/fish/functions/create-envrc
+# ~/.config/fish/functions/create-envrc.fish
 function _git-envrc-event --on-variable="PWD"
   set -l red (set_color red)
   set -l normal (set_color normal)
