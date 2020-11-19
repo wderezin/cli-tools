@@ -17,5 +17,7 @@ if status --is-interactive
   daily-check DCT_LAST_CHECK "withd $DARING_CLI_TOOLS_DIR git-abcheck"
 end
 
+eval (direnv hook fish)
+
 
 
