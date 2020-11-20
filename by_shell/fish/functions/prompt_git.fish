@@ -1,3 +1,10 @@
+function _git_branch_name
+  echo (command git symbolic-ref HEAD 2> /dev/null | sed -e 's|^refs/heads/||')
+end
+
+function _git_is_dirty
+  echo (command git status -s --ignore-submodules=dirty 2> /dev/null)
+end
 
 function prompt_git
   set -l cyan (set_color cyan)
@@ -16,6 +23,10 @@ function prompt_git
     else
       set git_info '(' $green $git_branch $normal ')'
     end
-    echo -n -s ' · ' $git_info $normal
+    echo -n -s $git_info $normal
+    return 0
   end
+
+  return 1
+
 end

@@ -5,12 +5,17 @@
 # - Current directory name
 # - Git branch and dirty state (if inside a git repo)
 
-function _git_branch_name
-  echo (command git symbolic-ref HEAD 2> /dev/null | sed -e 's|^refs/heads/||')
+function dot-before
+  if set -l output (eval $argv)
+    echo -n -s ' · '
+    echo -n -s $output
+  end
 end
 
-function _git_is_dirty
-  echo (command git status -s --ignore-submodules=dirty 2> /dev/null)
+function dot-after
+  if eval $argv
+    echo -n -s ' · '
+  end
 end
 
 function fish_prompt
@@ -23,19 +28,17 @@ function fish_prompt
   set -l green (set_color green)
   set -l normal (set_color normal)
 
-  set -l cwd $blue(pwd | sed "s:^$HOME:~:")
-
   # Output the prompt, left to right
 
   # Add a newline before new prompts
   echo -e ''
 
-  prompt_account
+  dot-after prompt_account
 
   # Print pwd or full path
   echo -n -s (prompt_pwd) $normal
 
-  prompt_git
+  dot-before prompt_git
 
   set -l prompt_color $red
   if test $last_status = 0
