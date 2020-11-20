@@ -83,7 +83,7 @@ function printWarning {
 }
 
 # Check if all the required applications are installed.
-for P in direnv env fish python3 pip3 sh jq git ssh bash
+for P in direnv env fish python3 pip3 sh jq git ssh bash aws_completer
 do
   if ! type $P >/dev/null 2>&1
   then

@@ -30,41 +30,12 @@ function fish_prompt
   # Add a newline before new prompts
   echo -e ''
 
-  # Display [venvname] if in a virtualenv
-  if set -q VIRTUAL_ENV
-    set -a acc_info $aws_access_color'VENV:'(string lower(basename $VIRTUAL_ENV))$normal
-  end
-  if set -q AWS_PROFILE
-    set -a acc_info $aws_access_color'AWS:'(string lower $AWS_PROFILE)$normal
-  else if set -q AWS_ACCESS_KEY_ID
-    set -a acc_info $aws_access_color'AWS:'(string lower (string sub --start=-4 AWS_ACCESS_KEY_ID))$normal
-  end
-  if set -q IBM_PROFILE
-    set -a acc_info $yellow'IBM:'$IBM_PROFILE$normal
-  else if set -q IBMCLOUD_API_KEY
-    set -a acc_info $yellow'IBM:'(string lower (string sub --start=-4 $IBMCLOUD_API_KEY))$normal
-  end
-  if set -q ETCDV3_USERNAME
-   set -a acc_info $yellow'ETC:'(string lower (string sub --start=-4 $ETCDV3_USERNAME))$normal
-  end
-  if set -q acc_info
-    echo -n -s '[' (string join , $acc_info) '] · '
-  end
+  prompt_account
 
   # Print pwd or full path
-  echo -n -s $cwd $normal
+  echo -n -s (prompt_pwd) $normal
 
-  # Show git branch and status
-  if [ (_git_branch_name) ]
-    set -l git_branch (_git_branch_name)
-
-    if [ (_git_is_dirty) ]
-      set git_info '(' $yellow $git_branch "±" $normal ')'
-    else
-      set git_info '(' $green $git_branch $normal ')'
-    end
-    echo -n -s ' · ' $git_info $normal
-  end
+  prompt_git
 
   set -l prompt_color $red
   if test $last_status = 0
