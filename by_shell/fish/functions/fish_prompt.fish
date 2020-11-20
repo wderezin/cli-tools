@@ -55,6 +55,8 @@ function fish_prompt
   end
   if set -q IBM_PROFILE
     set -a acc_info $yellow'IBM:'$IBM_PROFILE$normal
+  else if set -q IBMCLOUD_API_KEY
+    set -a acc_info $yellow'IBM'$normal
   end
   if set -q acc_info
     echo -n -s ' · [' (string join , $acc_info) ']'
