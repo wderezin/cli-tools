@@ -4,6 +4,13 @@ set -g DARING_CLI_TOOLS_DIR (dirname (dirname (realpath (status -f))))
 set -l FUNCTION_DIR $DARING_CLI_TOOLS_DIR/by_shell/fish/functions
 test -d $FUNCTION_DIR; and ! contains $FUNCTION_DIR $fish_function_path; and set -p fish_function_path $FUNCTION_DIR
 
+if [ (contains -i ~/.config/fish/functions $fish_function_path) -gt 1 ]
+  set -e fish_function_path[(contains -i ~/.config/fish/functions $fish_function_path)]
+end
+if ! contains ~/.config/fish/functions $fish_function_path
+  set -p fish_function_path ~/.config/fish/functions
+end
+
 # Make sure all event functions are loaded
 for func in (functions -a | grep '-event$')
   functions -D $func > /dev/null
