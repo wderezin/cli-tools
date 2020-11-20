@@ -51,12 +51,12 @@ function fish_prompt
   end
 
   if set -q AWS_PROFILE
-    set -a acc_info $aws_access_color'AWS:'$AWS_PROFILE$normal
+    set -l -a acc_info $aws_access_color'AWS:'$AWS_PROFILE$normal
   end
   if set -q IBM_PROFILE
-    set -a acc_info $yellow'IBM:'$IBM_PROFILE$normal
+    set -l -a acc_info $yellow'IBM:'$IBM_PROFILE$normal
   end
-  if [ (count acc_info) -gt 0 ]
+  if [ (count $acc_info) -gt 0 ]
     set -l line (string join , $acc_info)
     echo -n -s ' · [' $line ']'
   end
