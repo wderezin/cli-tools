@@ -32,7 +32,23 @@ function fish_prompt
 
   # Display [venvname] if in a virtualenv
   if set -q VIRTUAL_ENV
-      echo -n -s (set_color -b cyan black) '[' (basename "$VIRTUAL_ENV") ']' $normal ' '
+    set -a acc_info $aws_access_color'VENV:'(string lower(basename $VIRTUAL_ENV))$normal
+  end
+  if set -q AWS_PROFILE
+    set -a acc_info $aws_access_color'AWS:'(string lower $AWS_PROFILE)$normal
+  else if set -q AWS_ACCESS_KEY_ID
+    set -a acc_info $aws_access_color'AWS:'(string lower (string sub --start=-4 AWS_ACCESS_KEY_ID))$normal
+  end
+  if set -q IBM_PROFILE
+    set -a acc_info $yellow'IBM:'$IBM_PROFILE$normal
+  else if set -q IBMCLOUD_API_KEY
+    set -a acc_info $yellow'IBM:'(string lower (string sub --start=-4 $IBMCLOUD_API_KEY))$normal
+  end
+  if set -q ETCDV3_USERNAME
+   set -a acc_info $yellow'ETC:'(string lower (string sub --start=-4 $ETCDV3_USERNAME))$normal
+  end
+  if set -q acc_info
+    echo -n -s '[' (string join , $acc_info) '] · '
   end
 
   # Print pwd or full path
@@ -48,21 +64,6 @@ function fish_prompt
       set git_info '(' $green $git_branch $normal ')'
     end
     echo -n -s ' · ' $git_info $normal
-  end
-
-  if set -q AWS_PROFILE
-    set -a acc_info $aws_access_color'AWS:'$AWS_PROFILE$normal
-  end
-  if set -q IBM_PROFILE
-    set -a acc_info $yellow'IBM:'$IBM_PROFILE$normal
-  else if set -q IBMCLOUD_API_KEY
-    set -a acc_info $yellow'IBM:'(string lower (string sub --start=-4 $IBMCLOUD_API_KEY))$normal
-  end
-  if set -q ETCDV3_USERNAME
-   set -a acc_info $yellow'ETC:'(string lower (string sub --start=-4 $ETCDV3_USERNAME))$normal
-  end
-  if set -q acc_info
-    echo -n -s ' · [' (string join , $acc_info) ']'
   end
 
   set -l prompt_color $red
