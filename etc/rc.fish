@@ -19,5 +19,3 @@ end
 
 eval (direnv hook fish)
 
-
-

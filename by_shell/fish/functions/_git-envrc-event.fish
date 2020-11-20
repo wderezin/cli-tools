@@ -11,7 +11,7 @@ function _git-envrc-event --on-variable="PWD"
 
   if git rev-parse --git-dir >/dev/null 2>/dev/null
     set -l files .*-envrc
-    if count $files > 0
+    if [ (count $files) -gt 0 ]
 
       for file in $files
         if ! egrep -w "source_env\s+$file" .envrc >/dev/null 2>&1

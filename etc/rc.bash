@@ -5,7 +5,7 @@ do
   source $FILE
 done
 
-[[ ":$PATH:" != *":$DARING_CLI_TOOLS_DIR/bin:"* ]] && PATH=$DARING_CLI_TOOLS_DIR/bin:$PATH
+[[ ":$PATH:" != *":$DARING_CLI_TOOLS_DIR/bin:"* ]] && PATH=$PATH:$DARING_CLI_TOOLS_DIR/bin:
 
 if shopt -q interactive_comments
 then
