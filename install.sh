@@ -98,7 +98,7 @@ then
   do
     if ! pip3 show $P >/dev/null 2>&1
     then
-      printWarning "\"$P\" not installed, to install:  \"pip3 install ${P}\""
+      printWarning "\"$P\" not installed, to install:  \"sudo pip3 install ${P}\""
     fi
   done
 fi

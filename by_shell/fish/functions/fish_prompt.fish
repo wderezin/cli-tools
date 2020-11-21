@@ -9,13 +9,17 @@ function dot-before
   if set -l output (eval $argv)
     echo -n -s ' · '
     echo -n -s $output
+    return 0
   end
+  return 1
 end
 
 function dot-after
   if eval $argv
     echo -n -s ' · '
+    return 0
   end
+  return 1
 end
 
 function fish_prompt
@@ -35,10 +39,10 @@ function fish_prompt
 
   dot-after prompt_account
 
-  # Print pwd or full path
-  echo -n -s (prompt_pwd) $normal
-
-  dot-before prompt_git
+  if ! prompt_git include_path
+    # Print pwd or full path
+    echo -n -s (prompt_pwd) $normal
+  end
 
   set -l prompt_color $red
   if test $last_status = 0
