@@ -1,5 +1,8 @@
 # cli-tools
 
+A set of cli tools for Mac and Linux environments with a focus on the [fish shell](https://fishshell.com).  
+For non fish features bash and zsh are also supported.
+
 # 1 Step Installation 
 
 Clone this repo and run the install script which will it for fish, bash, and zsh if they are installed. 
@@ -8,6 +11,13 @@ If you want install in a location other then your HOME change the `cd` command.
 ```
 cd ~; git clone https://github.com/daringway/cli-tools.git; ./cli-tools/install.sh
 ``` 
+
+# Fish Setting
+
+To see list of current settings in the fish shell
+```
+dare-config
+```
 
 # Alternate Installation
 
