@@ -6,6 +6,10 @@ function _git_is_dirty
   echo (command git status -s --ignore-submodules=dirty 2> /dev/null)
 end
 
+function _git_ahead_behind_count
+   string split --no-empty \t (git rev-list --left-right --count origin/master...@)
+end
+
 function dot
   echo -n -s ' · '
 end
@@ -24,6 +28,9 @@ function prompt_git
 
   set -q dare_prompt_git_path
   or set -l dare_prompt_git_path true
+
+  set -q dare_prompt_git_ahead_behind_count
+  or set -l dare_prompt_git_ahead_behind_count true
 
   # Show git branch and status
   if test (_git_branch_name)
@@ -45,8 +52,21 @@ function prompt_git
       dot
     end
 
-    if test (_git_is_dirty)
-      set git_info '(' $yellow $git_branch "±" $normal ')'
+    set ab (_git_ahead_behind_count)
+    if test $ab[1] > 0; or test $ab[2] > 0
+      if $dare_prompt_git_ahead_behind_count
+        set ab (_git_ahead_behind_count)
+
+        test $ab[1] -gt 0
+        and set ahead $ab[1]"±"
+
+        test $ab[2] -gt 0
+        and set behind "±"$ab[2]
+
+      else if $ab[2] > 0
+        set behind "±"
+      end
+      set git_info '(' $yellow $ahead $git_branch $behind $normal ')'
     else
       set git_info '(' $green $git_branch $normal ')'
     end
