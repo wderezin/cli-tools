@@ -13,9 +13,9 @@ function prompt_account
     set -a acc_info $aws_access_color'VENV:'(string lower(basename $VIRTUAL_ENV))$normal
   end
 
-  if ! set -q aws_access_color
-    set aws_access_color $yellow
-  end
+  set -q aws_access_color
+  or set aws_access_color $yellow
+
   if set -q AWS_PROFILE
     set -a acc_info $aws_access_color'AWS:'(string lower $AWS_PROFILE)$normal
   else if set -q AWS_ACCESS_KEY_ID

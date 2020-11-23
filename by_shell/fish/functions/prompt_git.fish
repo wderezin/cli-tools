@@ -6,6 +6,10 @@ function _git_is_dirty
   echo (command git status -s --ignore-submodules=dirty 2> /dev/null)
 end
 
+function dot
+  echo -n -s ' · '
+end
+
 function prompt_git
   set -l cyan (set_color cyan)
   set -l yellow (set_color yellow)
@@ -14,32 +18,34 @@ function prompt_git
   set -l green (set_color green)
   set -l normal (set_color normal)
 
-  if [ "$argv[1]" = "include_path" ]
-    set include_path true
-  else
-    set include_path false
-  end
+  # This allows overriding fish_prompt_pwd_dir_length from the outside (global or universal) without leaking it
+  set -q fish_prompt_pwd_dir_length
+  or set -l fish_prompt_pwd_dir_length 1
+
+  set -q dare_prompt_git_path
+  or set -l dare_prompt_git_path true
 
   # Show git branch and status
-  if [ (_git_branch_name) ]
+  if test (_git_branch_name)
     set -l git_branch (_git_branch_name)
     set -l git_path_prefix (command git rev-parse --show-toplevel)
 
-    if $include_path
+    if $dare_prompt_git_path
       echo -n 'git:'(basename $git_path_prefix)
-      set -l tmp (string replace -r '^'"$git_path_prefix"'($|/)' '' $PWD)
+      # +2 to move just past /
+      set -l tmp (string sub --start=(math (string length $git_path_prefix) + 2) $PWD)
 
-      if [ $fish_prompt_pwd_dir_length -eq 0 ]
-          echo -n $blue'/'$tmp$normal
+      if test $fish_prompt_pwd_dir_length -eq 0
+          echo -n $blue/$tmp$normal
       else
           # Shorten to at most $fish_prompt_pwd_dir_length characters per directory
           echo -n $blue(string replace -ar '(\.?[^/]{'"$fish_prompt_pwd_dir_length"'})[^/]*/' '$1/' $tmp)$normal
       end
 
-      dot-before
+      dot
     end
 
-    if [ (_git_is_dirty) ]
+    if test (_git_is_dirty)
       set git_info '(' $yellow $git_branch "±" $normal ')'
     else
       set git_info '(' $green $git_branch $normal ')'

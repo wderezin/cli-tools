@@ -39,9 +39,18 @@ function fish_prompt
 
   dot-after prompt_account
 
-  if ! prompt_git include_path
-    # Print pwd or full path
+  # Need to make global so prompt_git sees it
+  set -q dare_prompt_git_path
+  or set -g dare_prompt_git_path true
+
+  if $dare_prompt_git_path
+    if ! prompt_git
+      # Print pwd or full path
+      echo -n -s (prompt_pwd) $normal
+    end
+  else
     echo -n -s (prompt_pwd) $normal
+    dot-before prompt_git
   end
 
   set -l prompt_color $red
@@ -52,8 +61,7 @@ function fish_prompt
     set ERROR_PROMPT "[$last_status]"
   end
 
-  if [ $USER = 'root' ]
-  then
+  if test $USER = 'root'
     set PROMPT_CHAR '$'
   else
     set PROMPT_CHAR '#'

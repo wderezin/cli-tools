@@ -1,14 +1,29 @@
-set -g DARING_CLI_TOOLS_DIR (dirname (dirname (realpath (status -f))))
+
+set -g dare_cli_tools_dir (dirname (dirname (realpath (status -f))))
 
 # Add function path
-set -l FUNCTION_DIR $DARING_CLI_TOOLS_DIR/by_shell/fish/functions
-test -d $FUNCTION_DIR; and ! contains $FUNCTION_DIR $fish_function_path; and set -p fish_function_path $FUNCTION_DIR
+set -l function_dir $dare_cli_tools_dir/by_shell/fish/functions
+test -d $function_dir; and ! contains $function_dir $fish_function_path; and set -p fish_function_path $function_dir
 
-if [ (contains -i ~/.config/fish/functions $fish_function_path) -gt 1 ]
-  set -e fish_function_path[(contains -i ~/.config/fish/functions $fish_function_path)]
-end
-if ! contains ~/.config/fish/functions $fish_function_path
+# Add bin to PATH
+set -l bin_dir $dare_cli_tools_dir/bin
+contains $bin_dir PATH; or set -p PATH $bin_dir
+
+if contains ~/.config/fish/functions $fish_function_path
+  if test (contains -i ~/.config/fish/functions $fish_function_path) -gt 1
+    set -e fish_function_path[(contains -i ~/.config/fish/functions $fish_function_path)]
+    set -p fish_function_path ~/.config/fish/functions
+  end
+else
   set -p fish_function_path ~/.config/fish/functions
+end
+
+if ! functions -q __direnv_export_eval
+  eval (direnv hook fish)
+end
+
+if status --is-interactive
+  daily-check __dare_last_update_check "withd $dare_cli_tools_dir git-abcheck"
 end
 
 # Make sure all event functions are loaded
@@ -16,18 +31,11 @@ for func in (functions -a | grep '-event$')
   functions -D $func > /dev/null
 end
 
-# Add bin bin to PATH
-set -l BIN_DIR $DARING_CLI_TOOLS_DIR/bin
-! contains $BIN_DIR  PATH; and set -p PATH $BIN_DIR
-
-if status --is-interactive
-  daily-check DCT_LAST_CHECK "withd $DARING_CLI_TOOLS_DIR git-abcheck"
-end
-
-eval (direnv hook fish)
-
 # Setup aws auto complete
 if command -q aws_completer
   complete --command aws --no-files --arguments '(begin; set --local --export COMP_SHELL fish; set --local --export COMP_LINE (commandline); aws_completer | sed \'s/ $//\'; end)'
 end
 
+if set -q DCT_LAST_CHECK
+  set -e DCT_LAST_CHECK
+end
