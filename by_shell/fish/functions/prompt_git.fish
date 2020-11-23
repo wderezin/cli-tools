@@ -39,7 +39,7 @@ function prompt_git
           echo -n $blue/$tmp$normal
       else
           # Shorten to at most $fish_prompt_pwd_dir_length characters per directory
-          echo -n $blue(string replace -ar '(\.?[^/]{'"$fish_prompt_pwd_dir_length"'})[^/]*/' '$1/' $tmp)$normal
+          echo -n $blue(string replace -ar '(\.?[^/]{'"$fish_prompt_pwd_dir_length"'})[^/]*/' '$1/' /$tmp)$normal
       end
 
       dot
