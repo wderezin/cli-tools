@@ -5,7 +5,7 @@ function __dare_config_show
     echo "    Description: " $argv[2]
     echo "         Values: " $argv[3]
     echo "        Default: " $argv[4]
-    echo "        Current: "(eval echo $$argv[1])
+    echo "        Current: " (eval echo $$argv[1])
   else
     echo $argv[1]':' (set -q $argv[1]; and eval echo $$argv[1]; or eval echo $argv[4])
   end
