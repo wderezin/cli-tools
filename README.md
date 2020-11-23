@@ -16,7 +16,8 @@ cd ~; git clone https://github.com/daringway/cli-tools.git; ./cli-tools/install.
 
 To see list of current settings in the fish shell
 ```
-dare-config
+dare-config           # brief 
+dare-config --details # detail information
 ```
 
 # Alternate Installation
