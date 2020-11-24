@@ -38,15 +38,19 @@ function prompt_git
     set -l git_path_prefix (command git rev-parse --show-toplevel)
 
     if $dare_prompt_git_path
-      echo -n 'git:'(basename $git_path_prefix)
-      # +2 to move just past /
-      set -l tmp (string sub --start=(math (string length $git_path_prefix) + 2) $PWD)
+      if test "$git_path_prefix" = ""
+        prompt_pwd
+      else 
+        echo -n 'git:'(basename $git_path_prefix)
+        # +2 to move just past /
+        set -l tmp (string sub --start=(math (string length $git_path_prefix) + 2) $PWD)
 
-      if test $fish_prompt_pwd_dir_length -eq 0
-          echo -n $blue/$tmp$normal
-      else
-          # Shorten to at most $fish_prompt_pwd_dir_length characters per directory
-          echo -n $blue(string replace -ar '(\.?[^/]{'"$fish_prompt_pwd_dir_length"'})[^/]*/' '$1/' /$tmp)$normal
+        if test $fish_prompt_pwd_dir_length -eq 0
+            echo -n $blue/$tmp$normal
+        else
+            # Shorten to at most $fish_prompt_pwd_dir_length characters per directory
+            echo -n $blue(string replace -ar '(\.?[^/]{'"$fish_prompt_pwd_dir_length"'})[^/]*/' '$1/' /$tmp)$normal
+        end
       end
 
       dot

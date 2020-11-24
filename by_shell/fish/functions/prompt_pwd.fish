@@ -26,10 +26,10 @@ function prompt_pwd --description "Print the current working directory, shortene
   set -l tmp (string replace -r '^'"$realhome"'($|/)' '~$1' $PWD)
 
   if test $fish_prompt_pwd_dir_length -eq 0
-      echo $blue$tmp$normal
+      echo -n $blue$tmp$normal
   else
       # Shorten to at most $fish_prompt_pwd_dir_length characters per directory
-      echo $blue(string replace -ar '(\.?[^/]{'"$fish_prompt_pwd_dir_length"'})[^/]*/' '$1/' $tmp)$normal
+      echo -n $blue(string replace -ar '(\.?[^/]{'"$fish_prompt_pwd_dir_length"'})[^/]*/' '$1/' $tmp)$normal
   end
 
 end
