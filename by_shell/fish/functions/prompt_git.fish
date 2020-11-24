@@ -7,7 +7,7 @@ function _git_is_dirty
 end
 
 function _git_ahead_behind_count
-   string split --no-empty \t (git rev-list --left-right --count origin/master...@)
+   string split --no-empty \t (git rev-list --left-right --count origin...@)
 end
 
 function dot
