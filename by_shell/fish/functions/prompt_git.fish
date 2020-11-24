@@ -7,7 +7,7 @@ function _git_is_dirty
 end
 
 function _git_ahead_behind_count
-   string split --no-empty \t (git rev-list --left-right --count origin...@)
+   string split --no-empty \t (command git rev-list --left-right --count origin/$argv...$argv)
 end
 
 function dot
@@ -52,7 +52,7 @@ function prompt_git
       dot
     end
 
-    set ab (_git_ahead_behind_count)
+    set ab (_git_ahead_behind_count $git_branch)
     if test $ab[1] -gt 0; or test $ab[2] -gt 0
       set ab_color $yellow
       if $dare_prompt_git_ahead_behind_count
