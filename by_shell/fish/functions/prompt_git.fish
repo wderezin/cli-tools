@@ -56,8 +56,6 @@ function prompt_git
     if test $ab[1] -gt 0; or test $ab[2] -gt 0
       set ab_color $yellow
       if $dare_prompt_git_ahead_behind_count
-        set ab (_git_ahead_behind_count)
-
         test $ab[1] -gt 0
         and set behind $ab[1]"±"
         and set ab_color $red
