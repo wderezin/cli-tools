@@ -17,7 +17,7 @@ PATH_brew() {
 use_aws_sso() {
   AWS_REGION=${AWS_REGION-us-east-1}
 
-  if [ ! -z ${AWS_PROFILE+x} ]
+  if [ -n "${AWS_PROFILE}" ]
   then
       eval "$(aws2-wrap --profile ${AWS_PROFILE} --export)"
   fi
