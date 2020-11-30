@@ -7,7 +7,12 @@ function _git_is_dirty
 end
 
 function _git_ahead_behind_count
-   string split --no-empty \t (command git rev-list --left-right --count origin/$argv...$argv)
+  if set -l line (command git rev-list --left-right --count $dare_prompt_git_remote/$argv...$argv 2>/dev/null)
+    string split --no-empty \t $line
+    return 0
+  else
+    return 1
+  end
 end
 
 function dot
@@ -28,6 +33,9 @@ function prompt_git
 
   set -q dare_prompt_git_path
   or set -l dare_prompt_git_path true
+
+  set -q dare_prompt_git_remote
+  or set -g dare_prompt_git_remote "origin"
 
   set -q dare_prompt_git_ahead_behind_count
   or set -l dare_prompt_git_ahead_behind_count true
@@ -56,32 +64,35 @@ function prompt_git
       dot
     end
 
-    set ab (_git_ahead_behind_count $git_branch)
-    if test $ab[1] -gt 0; or test $ab[2] -gt 0
-      set ab_color $yellow
-      if $dare_prompt_git_ahead_behind_count
-        test $ab[1] -gt 0
-        and set behind $ab[1]"±"
-        and set ab_color $red
+    if set ab (_git_ahead_behind_count $git_branch)
+      if test $ab[1] -gt 0; or test $ab[2] -gt 0
+        set ab_color $yellow
+        if $dare_prompt_git_ahead_behind_count
+          test $ab[1] -gt 0
+          and set behind $ab[1]"±"
+          and set ab_color $red
 
-        test $ab[2] -gt 0
-        and set ahead "±"$ab[2]
+          test $ab[2] -gt 0
+          and set ahead "±"$ab[2]
 
+        else
+
+          if test $ab[1] -gt 0
+            set behind "±"
+            set ab_color $red
+          end
+
+          if test $ab[2] -gt 0
+            set ahead "±"
+          end
+
+        end
+        set git_info '(' $ab_color $behind $git_branch $ahead $normal ')'
       else
-
-        if test $ab[1] -gt 0
-          set behind "±"
-          set ab_color $red
-        end
-
-        if test $ab[2] -gt 0
-          set ahead "±"
-        end
-
+        set git_info '(' $green $git_branch $normal ')'
       end
-      set git_info '(' $ab_color $behind $git_branch $ahead $normal ')'
-    else
-      set git_info '(' $green $git_branch $normal ')'
+    else 
+      set git_info $yellow 'no-'$dare_prompt_git_remote':(' $git_branch $normal ')'
     end
     echo -n -s $git_info $normal
 

@@ -31,6 +31,11 @@ function dare-config --description 'Display current setting for Dare cli-tools'
                      'true|false' \
                      'true'
 
+  __dare_config_show 'dare_prompt_git_remote' \
+                     'In git prompt, the remote name to compare with' \
+                     'string' \
+                     'origin'
+      
   __dare_config_show 'fish_prompt_pwd_dir_length' \
                      'How many characters to include when shorting the path' \
                      '0 - disabled, 1+ - enabled' \
