@@ -1,5 +1,5 @@
 function _git_branch_name
-  echo (command git symbolic-ref HEAD 2> /dev/null | sed -e 's|^refs/heads/||')
+  echo (command git symbolic-ref HEAD 2>/dev/null | sed -e 's|^refs/heads/||')
 end
 
 function _git_is_dirty
@@ -102,7 +102,7 @@ function prompt_git
     echo -n -s $git_info $normal
 
     return 0
-  else if git branch -l HEAD | grep 'detached' >/dev/null 2>/dev/null
+  else if git branch -l HEAD 2>/dev/null | grep 'detached' >/dev/null
     print_path
     echo -n -s $red '(detached)' $normal
     return 0
