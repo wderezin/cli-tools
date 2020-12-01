@@ -33,7 +33,7 @@ function prompt_account
   end
 
   if set -q acc_info
-    echo -n -s '[' (string join , $acc_info) '] '
+    echo -n -s '[' (string join , $acc_info) ']'
     return 0
   end
 
