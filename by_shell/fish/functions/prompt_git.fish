@@ -15,6 +15,15 @@ function _git_ahead_behind_count
   end
 end
 
+function __git_local_change_count
+  set -l count (git diff --name-only | wc -l | string trim)
+  if test $count -eq 0
+    echo ""
+  else
+    echo "△"$count
+  end
+end
+
 function dot
   echo -n -s ' · '
 end
@@ -70,41 +79,46 @@ function prompt_git
     print_path
 
     if set ab (_git_ahead_behind_count $git_branch)
+
+      set local_changes (__git_local_change_count)
+      
       if test $ab[1] -gt 0; or test $ab[2] -gt 0
+        # In a standard git branch
         set ab_color $yellow
         if $dare_prompt_git_ahead_behind_count
           test $ab[1] -gt 0
-          and set behind $ab[1]"±"
+          and set behind $ab[1]"－"
           and set ab_color $red
 
           test $ab[2] -gt 0
-          and set ahead "±"$ab[2]
+          and set ahead "＋"$ab[2]
 
         else
-
           if test $ab[1] -gt 0
-            set behind "±"
+            set behind "－"
             set ab_color $red
           end
 
           if test $ab[2] -gt 0
-            set ahead "±"
+            set ahead "＋"
           end
-
         end
-        set git_info '(' $ab_color $behind $git_branch $ahead $normal ')'
+
+        set git_info '(' $ab_color $behind $git_branch  $ahead $normal ')' $local_changes
       else
-        set git_info '(' $green $git_branch $normal ')'
+        set git_info '(' $green $git_branch  $normal ')' $local_changes
       end
     else 
-      set git_info $yellow 'no-'$dare_prompt_git_remote':(' $git_branch $normal ')'
+      set git_info $yellow '﹁'$dare_prompt_git_remote':(' $git_branch $normal ')' $local_changes
     end
+
     echo -n -s $git_info $normal
 
     return 0
   else if git branch -l HEAD 2>/dev/null | grep 'detached' >/dev/null
     print_path
-    echo -n -s $red '(detached)' $normal
+    set local_changes (__git_local_change_count)
+    echo -n -s $red '(detached)' $normal $local_changes
     return 0
   end
 
