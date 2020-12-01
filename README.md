@@ -20,6 +20,10 @@ dare-config           # brief
 dare-config --details # detail information
 ```
 
+# Dare Prompt
+
+`[ <Account Information> ] · <CWD>  ·  <GIT REMOTE INFO> ( <GIT BRANCH INFO> ) <GIT LOCAL INFO>`
+
 # Alternate Installation
 
 If you want control on how the cli-tools are added to your shell then these are the steps for you.
