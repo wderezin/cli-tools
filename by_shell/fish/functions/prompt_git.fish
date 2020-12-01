@@ -30,25 +30,29 @@ end
 
 function print_path 
   if $dare_prompt_git_path
+    set -l git_path_prefix (command git rev-parse --show-toplevel)
+    set -l blue (set_color blue)
+    set -l normal (set_color normal)
+
     if test "$git_path_prefix" = ""
       prompt_pwd
     else 
-      echo -n 'git:'(basename $git_path_prefix)
+      echo -n 'git:'$blue(basename $git_path_prefix)
       # +2 to move just past /
       set -l tmp (string sub --start=(math (string length $git_path_prefix) + 2) $PWD)
 
       if test $fish_prompt_pwd_dir_length -eq 0
-          echo -n $blue/$tmp$normal
+          echo -n /$tmp
       else
           # Shorten to at most $fish_prompt_pwd_dir_length characters per directory
-          echo -n $blue(string replace -ar '(\.?[^/]{'"$fish_prompt_pwd_dir_length"'})[^/]*/' '$1/' /$tmp)$normal
+          echo -n (string replace -ar '(\.?[^/]{'"$fish_prompt_pwd_dir_length"'})[^/]*/' '$1/' /$tmp)
       end
+      echo -n $normal
     end
 
     dot
   end
 end
-
 
 function prompt_git
   set -l cyan (set_color cyan)
@@ -74,7 +78,6 @@ function prompt_git
   # Show git branch and status
   if test (_git_branch_name)
     set -l git_branch (_git_branch_name)
-    set -l git_path_prefix (command git rev-parse --show-toplevel)
 
     print_path
 
