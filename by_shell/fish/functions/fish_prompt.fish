@@ -43,14 +43,8 @@ function fish_prompt
   set -q dare_prompt_git_path
   or set -g dare_prompt_git_path true
 
-  if $dare_prompt_git_path
-    if ! prompt_git
-      # Print pwd or full path
-      echo -n -s (prompt_pwd) $normal
-    end
-  else
-    echo -n -s (prompt_pwd) $normal
-    dot-before prompt_git
+  if ! prompt_git
+    prompt_pwd
   end
 
   set -l prompt_color $red

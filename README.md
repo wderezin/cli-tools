@@ -22,7 +22,15 @@ dare-config --details # detail information
 
 # Dare Prompt
 
-`[ <Account Information> ] · <CWD>  ·  <GIT REMOTE INFO> ( <GIT BRANCH INFO> ) <GIT LOCAL INFO>`
+```
+[ <Account Information> ] · <CWD>  ·  <GIT Remote> ( <GIT BRANCH INFO> ) <GIT LOCAL INFO>
+[ <ERROR RETURN CODE> ]#
+```
+
+Where:
+Account Information: Supported accounts AWS, Virtual ENV, IBM Cloud, ETCDV3
+CWD: Current working directory or short git path relative to repo directory
+GIT Remote: information about the remote.
 
 # Alternate Installation
 
