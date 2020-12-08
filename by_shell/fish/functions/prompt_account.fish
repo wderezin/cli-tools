@@ -16,10 +16,17 @@ function prompt_account
   set -q aws_access_color
   or set aws_access_color $yellow
 
+  if set -q AWS_AUTH_ON
+    if test -z "$AWS_AUTH_ON"
+      set -g aws_access_color (set_color red)
+    else
+      set -g aws_access_color (set_color green)
+    end
+  end
   if set -q AWS_PROFILE
     set -a acc_info $aws_access_color'AWS:'(string lower $AWS_PROFILE)$normal
   else if set -q AWS_ACCESS_KEY_ID
-    set -a acc_info $aws_access_color'AWS:'(string lower (string sub --start=-4 AWS_ACCESS_KEY_ID))$normal
+    set -a acc_info $aws_access_color'AWS:'(string lower (string sub --start=-4 $AWS_ACCESS_KEY_ID))$normal
   end
 
   if set -q IBM_PROFILE
