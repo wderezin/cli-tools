@@ -23,7 +23,7 @@ PATH_brew() {
 use_aws_sso() {
   AWS_REGION=${AWS_REGION-us-east-1}
 
-  if test -n $1
+  if test -n "$1"
   then
     export AWS_PROFILE=$1
   fi 
