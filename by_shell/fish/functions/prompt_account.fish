@@ -18,7 +18,7 @@ function prompt_account
 
   if set -q AWS_AUTH_ON
     if test -z "$AWS_AUTH_ON"
-      set -g aws_access_color $fish_color_error
+      set -g aws_access_color (set_color red)
     else
       set -g aws_access_color (set_color green)
     end
