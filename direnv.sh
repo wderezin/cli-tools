@@ -5,7 +5,13 @@ nvm() {
 }
 
 PATH_brew() {
-  DIR=$(brew --prefix $1@$2)
+  if test -n $2
+  then
+    DIR=$(brew --prefix $1@$2)
+  else
+    DIR=$(brew --prefix $1)
+  fi
+
   if [[ -d $DIR/bin ]]
   then
     PATH_add $DIR/bin
@@ -16,6 +22,11 @@ PATH_brew() {
 
 use_aws_sso() {
   AWS_REGION=${AWS_REGION-us-east-1}
+
+  if test -n $1
+  then
+    export AWS_PROFILE=$1
+  fi 
 
   if [ -n "${AWS_PROFILE}" ]
   then
