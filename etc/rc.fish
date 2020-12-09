@@ -18,24 +18,20 @@ else
   set -p fish_function_path ~/.config/fish/functions
 end
 
-if ! functions -q __direnv_export_eval
-  eval (direnv hook fish)
-end
-
 if status --is-interactive
+
+  direnv hook fish | source 
+
+  # Setup aws auto complete
+  if command -q aws_completer
+    complete --command aws --no-files --arguments '(begin; set --local --export COMP_SHELL fish; set --local --export COMP_LINE (commandline); aws_completer | sed \'s/ $//\'; end)'
+  end
+
+  # Make sure all event functions are loaded
+  for func in (functions -a | grep '-event$')
+    functions -D $func > /dev/null
+  end
+
   daily-check __dare_last_update_check "withd $dare_cli_tools_dir git-abcheck"
-end
 
-# Make sure all event functions are loaded
-for func in (functions -a | grep '-event$')
-  functions -D $func > /dev/null
-end
-
-# Setup aws auto complete
-if command -q aws_completer
-  complete --command aws --no-files --arguments '(begin; set --local --export COMP_SHELL fish; set --local --export COMP_LINE (commandline); aws_completer | sed \'s/ $//\'; end)'
-end
-
-if set -q DCT_LAST_CHECK
-  set -e DCT_LAST_CHECK
 end
