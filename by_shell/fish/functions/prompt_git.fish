@@ -2,20 +2,15 @@ function _git_branch_name
   echo (command git symbolic-ref HEAD 2>/dev/null | sed -e 's|^refs/heads/||')
 end
 
-function _git_remote_name 
-  set -l branch $argv[1]
+function _git_remote_name -a branch 
   echo (command git config --get branch.$branch.remote)
 end
 
-function _git_merge_name 
-  set -l branch $argv[1]
+function _git_merge_name -a branch
   echo (command git config --get branch.$branch.merge | sed -e 's|^refs/heads/||')
 end
 
-function _git_ahead_behind_count
-  set -l branch $argv[1]
-  set -l remote $argv[2]
-  set -l merge $argv[3]
+function _git_ahead_behind_count -a branch remote merge
   command git rev-list --left-right --count $remote/$merge...$branch 2>/dev/null | string split --no-empty \t
 end
 
@@ -59,16 +54,11 @@ function _git_print_path
   end
 end
 
-function _git_print_branch_info
-  set -l branch $argv[1]
-  set -l remote $argv[2]
-  set -l merge $argv[3]
-
+function _git_print_branch_info -a branch remote merge
   set -l yellow (set_color yellow)
   set -l red (set_color red)
   set -l green (set_color green)
   set -l normal (set_color normal)
-
 
   set -l ab (_git_ahead_behind_count $branch $remote $merge)
   if test $ab[1] -gt 0; or test $ab[2] -gt 0

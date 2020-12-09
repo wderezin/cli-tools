@@ -1,4 +1,22 @@
 
+function _setPreviousAWS
+  set -g previous_AWS_PROFILE $AWS_PROFILE
+  set -g previous_AWS_SESSION_TOKEN $AWS_SESSION_TOKEN
+  set -g previous_AWS_ACCESS_KEY_ID $AWS_ACCESS_KEY_ID
+  set -g previous_AWS_SECRET_ACCESS_KEY $AWS_SECRET_ACCESS_KEY
+  set -g previous_AWS_CREDS_CHANGED $AWS_CREDS_CHANGED
+end
+
+function _awsChanged
+  test "$previous_AWS_PROFILE" = "$AWS_PROFILE"
+  and test "$previous_AWS_SESSION_TOKEN" = "$AWS_SESSION_TOKEN"
+  and test "$previous_AWS_ACCESS_KEY_ID" = "$AWS_ACCESS_KEY_ID"
+  and test "$previous_AWS_SECRET_ACCESS_KEY" = "$AWS_SECRET_ACCESS_KEY"
+  and test "$previous_AWS_CREDS_CHANGED" = "$AWS_CREDS_CHANGED"
+  and return 1
+
+  return 0
+end
 
 function prompt_account
   set -l cyan (set_color cyan)
@@ -13,16 +31,19 @@ function prompt_account
     set -a acc_info $aws_access_color'VENV:'(string lower(basename $VIRTUAL_ENV))$normal
   end
 
-  set -q aws_access_color
-  or set aws_access_color $yellow
-
-  if set -q AWS_AUTH_ON
-    if test -z "$AWS_AUTH_ON"
-      set -g aws_access_color (set_color red)
+  if _awsChanged
+    if test -n $AWS_PROFILE; or test -n $AWS_ACCESS_KEY_ID
+        if command aws sts get-caller-identity >/dev/null 2>&1
+          set -g aws_access_color (set_color green)
+        else
+          set -g aws_access_color (set_color red)
+        end
     else
-      set -g aws_access_color (set_color green)
+      set -g aws_access_color (set_color normal)
     end
+    _setPreviousAWS
   end
+  
   if set -q AWS_PROFILE
     set -a acc_info $aws_access_color'AWS:'(string lower $AWS_PROFILE)$normal
   else if set -q AWS_ACCESS_KEY_ID
