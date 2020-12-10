@@ -38,8 +38,6 @@ function prompt_account
         else
           set -g aws_access_color (set_color red)
         end
-    else
-      set -g aws_access_color (set_color normal)
     end
     _setPreviousAWS
   end

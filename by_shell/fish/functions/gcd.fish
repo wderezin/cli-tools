@@ -1,3 +1,4 @@
+
 function gcd --description 'git cd relative to the git root directory'
   if test "$argv" = "-"
     cd -

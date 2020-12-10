@@ -19,8 +19,11 @@ else
 end
 
 if status --is-interactive
-
-  direnv hook fish | source 
+  
+  #  direnv hook fish | source 
+  if command -q direnv
+    direnv-hook
+  end
 
   # Setup aws auto complete
   if command -q aws_completer

@@ -35,7 +35,11 @@ function fish_prompt
   # Output the prompt, left to right
 
   # Add a newline before new prompts
-  echo -e ''
+  echo -e ''     
+
+  # Make sure the line is cleared with arrow pwd history
+  # `tput el` generate a clear to end of line
+  echo -ne (tput el)
 
   dot-after prompt_account
 
