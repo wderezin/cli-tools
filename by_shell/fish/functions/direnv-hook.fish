@@ -3,14 +3,18 @@
 # Support history arrows
 # To override create direnv-hook function in your ~/.config/fish/functions
 
-function direnv-hook
+function direnv-hook 
+
+  set -q direnv_eval_on_pwd
+  or set -g direnv_eval_on_pwd true
+
   function __direnv_export_eval --on-event fish_prompt
     # Run on each prompt to update the state
     command direnv export fish | source
 
     # Handle cd history arrows between now and the next prompt
     function __direnv_cd_hook --on-variable PWD
-      set -q direnv_eval_on_pwd
+      test $direnv_eval_on_pwd
       and command direnv export fish | source
       or set -g __direnv_export_again 0
     end
