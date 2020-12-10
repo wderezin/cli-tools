@@ -10,31 +10,31 @@ set -l bin_dir $dare_cli_tools_dir/bin
 contains $bin_dir PATH; or set -p PATH $bin_dir
 
 if contains ~/.config/fish/functions $fish_function_path
-  if test (contains -i ~/.config/fish/functions $fish_function_path) -gt 1
-    set -e fish_function_path[(contains -i ~/.config/fish/functions $fish_function_path)]
-    set -p fish_function_path ~/.config/fish/functions
-  end
+    if test (contains -i ~/.config/fish/functions $fish_function_path) -gt 1
+        set -e fish_function_path[(contains -i ~/.config/fish/functions $fish_function_path)]
+        set -p fish_function_path ~/.config/fish/functions
+    end
 else
-  set -p fish_function_path ~/.config/fish/functions
+    set -p fish_function_path ~/.config/fish/functions
 end
 
 if status --is-interactive
-  
-  #  direnv hook fish | source 
-  if command -q direnv
-    direnv-hook
-  end
 
-  # Setup aws auto complete
-  if command -q aws_completer
-    complete --command aws --no-files --arguments '(begin; set --local --export COMP_SHELL fish; set --local --export COMP_LINE (commandline); aws_completer | sed \'s/ $//\'; end)'
-  end
+    #  direnv hook fish | source 
+    if command -q direnv
+        direnv-hook
+    end
 
-  # Make sure all event functions are loaded
-  for func in (functions -a | grep '-event$')
-    functions -D $func > /dev/null
-  end
+    # Setup aws auto complete
+    if command -q aws_completer
+        complete --command aws --no-files --arguments '(begin; set --local --export COMP_SHELL fish; set --local --export COMP_LINE (commandline); aws_completer | sed \'s/ $//\'; end)'
+    end
 
-  daily-check __dare_last_update_check "withd $dare_cli_tools_dir git-abcheck"
+    # Make sure all event functions are loaded
+    for func in (functions -a | grep '-event$')
+        functions -D $func >/dev/null
+    end
+
+    daily-check __dare_last_update_check "withd $dare_cli_tools_dir git-abcheck"
 
 end
