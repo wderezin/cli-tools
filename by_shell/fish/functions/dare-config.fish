@@ -31,4 +31,10 @@ function dare-config --description 'Display current setting for Dare cli-tools'
                      '0 - disabled, 1+ - enabled' \
                      '1'
 
+  __dare_config_show 'direnv_eval_on_pwd' \
+                     'Enable direnv on each arrow cd, if disable will run direnv before next command execution' \
+                     'true|false' \
+                     'false'                    
+
+
 end
