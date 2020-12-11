@@ -6,7 +6,7 @@
 function direnv-hook
 
     set -q direnv_eval_on_pwd
-    or set -g direnv_eval_on_pwd true
+    or set -g direnv_eval_on_pwd false
 
     function __direnv_export_eval --on-event fish_prompt
         # Run on each prompt to update the state
@@ -14,7 +14,7 @@ function direnv-hook
 
         # Handle cd history arrows between now and the next prompt
         function __direnv_cd_hook --on-variable PWD
-            test $direnv_eval_on_pwd
+            $direnv_eval_on_pwd
             and command direnv export fish | source
             or set -g __direnv_export_again 0
         end

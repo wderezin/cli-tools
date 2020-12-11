@@ -7,10 +7,12 @@ nvm() {
 PATH_brew() {
   if test -n $2
   then
-    DIR=$(brew --prefix $1@$2)
+    FIND="$1@$2"
   else
-    DIR=$(brew --prefix $1)
+    FIND="$1"
   fi
+
+  DIR=$(brew --prefix $FIND)
 
   if [[ -d $DIR/bin ]]
   then
@@ -18,6 +20,10 @@ PATH_brew() {
   else
     PATH_add $DIR
   fi
+}
+
+use_terraform() {
+    PATH_brew terraform $1
 }
 
 use_aws_sso() {
