@@ -1,4 +1,5 @@
 
+
 set -g dare_cli_tools_dir (dirname (dirname (realpath (status -f))))
 
 # Add function path
@@ -20,9 +21,10 @@ end
 
 if status --is-interactive
 
-    #  direnv hook fish | source 
     if command -q direnv
+        set -g direnv_fish_mode eval_after_arrow
         direnv-hook
+        # direnv hook fish | source
     end
 
     # Setup aws auto complete
@@ -38,3 +40,4 @@ if status --is-interactive
     daily-check __dare_last_update_check "withd $dare_cli_tools_dir git-abcheck"
 
 end
+
