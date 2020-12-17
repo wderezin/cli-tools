@@ -3,8 +3,8 @@
 # Support history arrows
 # To override create direnv-hook function in your ~/.config/fish/functions
 
-function direnv-hook 
-    function __direnv_update
+function direnv-hook
+    function __direnv_export
         command direnv export fish | source
 
         if test "$direnv_set_aliases" != "$DIRENV_ALIASES"
@@ -26,7 +26,7 @@ function direnv-hook
 
     function __direnv_export_eval --on-event fish_prompt
         # Run on each prompt to update the state
-        __direnv_update
+        __direnv_export
 
         if test "$direnv_fish_mode" != "disable_arrow"
             # Handle cd history arrows between now and the next prompt
@@ -35,7 +35,7 @@ function direnv-hook
                     set -g __direnv_export_again 0
                 else
                     # default mode (eval_on_pwd)
-                    __direnv_update
+                    __direnv_export
                 end
             end
         end
@@ -44,7 +44,7 @@ function direnv-hook
     function __direnv_export_eval_2 --on-event fish_preexec
         if set -q __direnv_export_again
             set -e __direnv_export_again
-            __direnv_update
+            __direnv_export
             echo
         end
 
