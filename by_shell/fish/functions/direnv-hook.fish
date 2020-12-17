@@ -10,12 +10,31 @@ function direnv-hook -a mode
 
     # 2 modes
     # eval_on_pwd - (default)
-    # eval_after_arrow - 
+    # eval_after_arrow -
 
+    function __direnv_update
+        command direnv export fish | source
+
+        if test "$direnv_set_aliases" != "$DIRENV_ALIASES"
+            for name in $direnv_alias_names
+                functions --erase $name
+            end
+            set -e direnv_alias_names
+
+            for cmd in (echo $DIRENV_ALIASES |string split --no-empty ':alias:')
+                echo "direnv: alias $cmd"
+                eval alias $cmd
+                set parts (echo $cmd | string split --no-empty ' ')
+                set -g -a direnv_alias_names $parts[1]
+            end
+
+            set -g direnv_set_aliases $DIRENV_ALIASES
+        end
+    end
 
     function __direnv_export_eval --on-event fish_prompt
         # Run on each prompt to update the state
-        command direnv export fish | source
+        __direnv_update
 
         if test "$direnv_fish_mode" != "disable_arrow"
             # Handle cd history arrows between now and the next prompt
@@ -24,7 +43,7 @@ function direnv-hook -a mode
                     set -g __direnv_export_again 0
                 else
                     # default mode (eval_on_pwd)
-                    command direnv export fish | source
+                    __direnv_update
                 end
             end
         end
@@ -33,7 +52,7 @@ function direnv-hook -a mode
     function __direnv_export_eval_2 --on-event fish_preexec
         if set -q __direnv_export_again
             set -e __direnv_export_again
-            command direnv export fish | source
+            __direnv_update
             echo
         end
 
