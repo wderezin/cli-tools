@@ -4,20 +4,6 @@ nvm() {
     nvm $*
 }
 
-#alias_dir=$PWD/.direnv/aliases
-#rm -rf "$alias_dir"
-#export_alias() {
-#  local name=$1
-#  shift
-#  local alias_dir=$PWD/.direnv/aliases
-#  local target="$alias_dir/$name"
-#  mkdir -p "$alias_dir"
-#  PATH_add "$alias_dir"
-#  echo "#!/usr/bin/env bash -e" > "$target"
-#  echo "$@" >> "$target"
-#  chmod +x "$target"
-#}
-
 export_alias() {
   local name=$1
   shift
@@ -48,16 +34,16 @@ PATH_brew() {
 }
 
 use_terraform() {
-  if test -n $2
+  if test -n $1
   then
-    FIND="$1@$2"
+    FIND="terraform@$1"
   else
-    FIND="$1"
+    FIND="terraform"
   fi
   DIR=$(brew --prefix $FIND)
   if [[ -x $DIR/bin/terraform ]]
   then
-    export alias terraform $DIR/bin/terraform
+    export_alias terraform $DIR/bin/terraform
   else
     echo "direnv: ERROR can not find $FIND"
   fi

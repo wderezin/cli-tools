@@ -21,7 +21,7 @@ function direnv-hook -a mode
             end
             set -e direnv_alias_names
 
-            for cmd in (echo $DIRENV_ALIASES |string split --no-empty ':alias:')
+            for cmd in (echo $DIRENV_ALIASES | string split --no-empty ':alias:')
                 echo "direnv: alias $cmd"
                 eval alias $cmd
                 set parts (echo $cmd | string split --no-empty ' ')
