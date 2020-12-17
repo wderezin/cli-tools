@@ -1,4 +1,3 @@
-#!/usr/bin/env fish
 
 function create-envrc --description 'Create .envrc to include existing .*-envrc files'
 

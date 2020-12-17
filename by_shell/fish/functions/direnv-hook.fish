@@ -3,15 +3,7 @@
 # Support history arrows
 # To override create direnv-hook function in your ~/.config/fish/functions
 
-function direnv-hook -a mode
-
-    # set -q direnv_fish_mode
-    # or set -g direnv_fish_mode default
-
-    # 2 modes
-    # eval_on_pwd - (default)
-    # eval_after_arrow -
-
+function direnv-hook 
     function __direnv_update
         command direnv export fish | source
 
