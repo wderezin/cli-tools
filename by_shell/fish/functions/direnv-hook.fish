@@ -14,11 +14,11 @@ function direnv-hook
             set -e direnv_alias_names
 
             for cmd in (echo $DIRENV_ALIASES | string split --no-empty ':alias:')
-                echo "direnv: alias $cmd"
                 eval alias $cmd
                 set parts (echo $cmd | string split --no-empty ' ')
-                set -g -a direnv_alias_names $parts[1]
+                ! contains $parts[1] $direnv_alias_names; and set -g -a direnv_alias_names $parts[1]
             end
+            set -q direnv_alias_names; and echo "direnv: alias " +$direnv_alias_names
 
             set -g direnv_set_aliases $DIRENV_ALIASES
         end

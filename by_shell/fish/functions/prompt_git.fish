@@ -61,7 +61,9 @@ function _git_print_branch_info -a branch remote merge
     set -l normal (set_color normal)
 
     set -l ab (_git_ahead_behind_count $branch $remote $merge)
-    if test $ab[1] -gt 0; or test $ab[2] -gt 0
+    if test (count $ab) -lt 2
+        echo -n -s $red upstream-gone $normal '(' $yellow $branch $normal ')'
+    else if test $ab[1] -gt 0; or test $ab[2] -gt 0
         # In a standard git branch
         set ab_color $yellow
 
