@@ -45,7 +45,7 @@ function prompt_account
         _setPreviousAWS
     end
 
-    if set -q AWS_EXPIRATION; and test (date +%s) -gt (date -j -f "%Y-%m-%dT%H:%M:%S" $AWS_EXPIRATION +%s 2>/dev/null)
+    if set -q AWS_EXPIRATION; and test (date +%s) -gt (date -j -f "%Y-%m-%dT%H:%M:%S%z" $AWS_EXPIRATION +%s 2>/dev/null)
         set -g prompt_aws_access_color $red
         set prompt_aws_prefix '(expired)AWS'
     end

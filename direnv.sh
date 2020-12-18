@@ -60,7 +60,8 @@ use_aws_sso() {
   if [ -n "${AWS_PROFILE}" ]
   then
       eval "$(aws2-wrap --profile ${AWS_PROFILE} --export)"
-      export AWS_EXPIRATION=$(aws2-wrap --process --profile prod| jq -re '.Expiration')
+    #   Need perl to fix timezone to RFC format
+      export AWS_EXPIRATION=$(aws2-wrap --process --profile prod | jq -re '.Expiration' | perl -pne  's/:(\d\d)$/\1/')
   fi
 
   watch_file  ~/.aws/sso/cache/*.json
