@@ -60,6 +60,7 @@ use_aws_sso() {
   if [ -n "${AWS_PROFILE}" ]
   then
       eval "$(aws2-wrap --profile ${AWS_PROFILE} --export)"
+      export AWS_EXPIRATION=$(aws2-wrap --process --profile prod| jq -re '.Expiration')
   fi
 
   watch_file  ~/.aws/sso/cache/*.json
