@@ -41,11 +41,21 @@ function prompt_account
                 set -g prompt_aws_access_color (set_color red)
             end
         end
+
         set -g prompt_aws_prefix 'AWS'
         _setPreviousAWS
+
+        set -e aws_expiration_epoch
+        if set -q AWS_EXPIRATION
+            set -g aws_expiration_epoch (date -j -f "%Y-%m-%d %H:%M:%S%z" (echo $AWS_EXPIRATION | perl -pe 's/:(\d\d)$/\1/; s/T/ /') +%s 2>/dev/null)
+            if test -z "$aws_expiration_epoch"
+                set -e aws_expiration_epoch
+                echo "prompt_account ERROR: failed to parse AWS_EXPIRATION"
+            end
+        end
     end
 
-    if set -q AWS_EXPIRATION; and test (date +%s) -gt (date -j -f "%Y-%m-%dT%H:%M:%S%z" $AWS_EXPIRATION +%s 2>/dev/null)
+    if set -q aws_expiration_epoch; and test (date +%s) -gt $aws_expiration_epoch
         set -g prompt_aws_access_color $red
         set prompt_aws_prefix '(expired)AWS'
     end
