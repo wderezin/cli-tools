@@ -59,8 +59,8 @@ use_aws_sso() {
 
   if [ -n "${AWS_PROFILE}" ]
   then
-      eval "$(aws2-wrap --profile ${AWS_PROFILE} --export)"
-      export AWS_EXPIRATION=$(aws2-wrap --process --profile prod | jq -re '.Expiration')
+    eval "$(aws2-wrap --profile ${AWS_PROFILE} --export)"
+    export AWS_EXPIRATION=$(aws2-wrap --process --profile prod | jq -re '.Expiration')
   fi
 
   watch_file  ~/.aws/sso/cache/*.json
@@ -74,7 +74,19 @@ use_aws_credentials() {
     export AWS_PROFILE=$1
   fi 
 
-  export AWS_CREDS_CHANGED="$(date)"
+  SOURCE_PROFILE="$(sed -nr '1,/\['${AWS_PROFILE}'\]/d;/\[/,$d;/^$/d;/^source_profile/ s/.*\= *// p' ~/.aws/credentials 2>/dev/null)"
+  if [ "$SOURCE_PROFILE" = "" ]
+  then
+    SOURCE_PROFILE=$AWS_PROFILE
+  fi
+
+  AWS_EXPIRATION="$(sed -nr '1,/\['${SOURCE_PROFILE}'\]/d;/\[/,$d;/^$/d;/^expiration/ s/.*\= *// p' ~/.aws/credentials 2>/dev/null)"
+  if [ "$AWS_EXPIRATION" != "" ]
+  then
+    export AWS_EXPIRATION
+  else
+    export AWS_CREDS_CHANGED="$(date)"
+  fi
 
   watch_file ~/.aws/credentials
 }
