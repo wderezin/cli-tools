@@ -63,6 +63,8 @@ use_aws_sso() {
     export AWS_EXPIRATION=$(aws2-wrap --process --profile prod | jq -re '.Expiration')
   fi
 
+  export AWS_REGION=${AWS_REGION-us-esat-1}
+
   watch_file  ~/.aws/sso/cache/*.json
 }
 
@@ -87,6 +89,9 @@ use_aws_credentials() {
   else
     export AWS_CREDS_CHANGED="$(date)"
   fi
+
+  export AWS_REGION=${AWS_REGION-us-esat-1}
+  export AWS_SDK_LOAD_CONFIG=${AWS_SDK_LOAD_CONFIG-yes}
 
   watch_file ~/.aws/credentials
 }
