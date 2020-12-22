@@ -27,7 +27,7 @@ function _git_print_path
 
     # This allows overriding fish_prompt_pwd_dir_length from the outside (global or universal) without leaking it
     set -q fish_prompt_pwd_dir_length
-    or set -l fish_prompt_pwd_dir_length 1
+    or set -l fish_prompt_pwd_dir_length 0
 
     set -q dare_prompt_git_path
     or set -l dare_prompt_git_path true
@@ -95,27 +95,29 @@ function prompt_git
     set -q dare_prompt_seperator
     or set -l dare_prompt_seperator $normal' · '
 
-    # Show git branch and status
-    if test $branch; and test $remote
-        # Tracked branch
-        echo -n -s (_git_print_path)
-        echo -n -s $dare_prompt_seperator
-        echo -n -s (_git_print_branch_info $branch $remote $merge)
-        echo -n -s $normal (_git_print_local_change_count)
-        return 0
-    else if test $branch
-        # Untrack branch
-        echo -n -s (_git_print_path)
-        echo -n -s $dare_prompt_seperator
-        echo -n -s $red 'untracked(' $branch ')'
-        echo -n -s $normal (_git_print_local_change_count)
-        return 0
-    else if git branch -l HEAD 2>/dev/null | grep 'detached' >/dev/null
-        # Detached branch
-        echo -n -s (_git_print_path)
-        echo -n -s $red '(detached)'
-        echo -n -s $normal (_git_print_local_change_count)
-        return 0
+    if command git rev-parse --show-toplevel 2>/dev/null >/dev/null
+        # Show git branch and status
+        if test $branch; and test $remote
+            # Tracked branch
+            echo -n -s (_git_print_path)
+            echo -n -s $dare_prompt_seperator
+            echo -n -s (_git_print_branch_info $branch $remote $merge)
+            echo -n -s $normal (_git_print_local_change_count)
+            return 0
+        else if test $branch
+            # Untrack branch
+            echo -n -s (_git_print_path)
+            echo -n -s $dare_prompt_seperator
+            echo -n -s $red 'untracked(' $branch ')'
+            echo -n -s $normal (_git_print_local_change_count)
+            return 0
+        else if git branch -l HEAD 2>/dev/null | grep 'detached' >/dev/null
+            # Detached branch
+            echo -n -s (_git_print_path)
+            echo -n -s $red '(detached)'
+            echo -n -s $normal (_git_print_local_change_count)
+            return 0
+        end
     end
 
     return 1
