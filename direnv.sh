@@ -59,11 +59,13 @@ use_aws_sso() {
 
   if [ -n "${AWS_PROFILE}" ]
   then
-    eval "$(aws2-wrap --profile ${AWS_PROFILE} --export)"
-    export AWS_EXPIRATION=$(aws2-wrap --process --profile prod | jq -re '.Expiration')
+    eval $(aws2-wrap --profile ${AWS_PROFILE}  --process | jq -r 'to_entries|map("\(.key)=\"\(.value|tostring)\"")|.[]')
+    export AWS_ACCESS_KEY_ID=$AccessKeyId
+    export AWS_SECRET_ACCESS_KEY=$SecretAccessKey
+    export AWS_SESSION_TOKEN=$SessionToken
+    export AWS_EXPIRATION=$Expiration
+    export AWS_REGION=${AWS_REGION-us-esat-1}
   fi
-
-  export AWS_REGION=${AWS_REGION-us-esat-1}
 
   watch_file  ~/.aws/sso/cache/*.json
 }
