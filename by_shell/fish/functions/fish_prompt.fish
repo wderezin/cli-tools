@@ -43,6 +43,8 @@ function fish_prompt
 
     dot-after prompt_account
 
+    dot-after prompt_env
+
     # Need to make global so prompt_git sees it
     set -q dare_prompt_git_path
     or set -g dare_prompt_git_path true

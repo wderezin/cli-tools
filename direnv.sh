@@ -97,3 +97,7 @@ use_aws_credentials() {
 
   watch_file ~/.aws/credentials
 }
+
+source_local() {
+    source_env ~/.config/direnv/local/$1
+}
