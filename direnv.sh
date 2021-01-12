@@ -33,20 +33,36 @@ PATH_brew() {
   fi
 }
 
+
 use_terraform() {
-  if test -n $1
-  then
-    FIND="terraform@$1"
-  else
-    FIND="terraform"
-  fi
-  DIR=$(brew --prefix $FIND)
-  if [[ -x $DIR/bin/terraform ]]
-  then
-    export_alias terraform $DIR/bin/terraform
-  else
-    echo "direnv: ERROR can not find $FIND"
-  fi
+    if ! which tfswitch >/dev/null 2>&1
+    then
+        echo "ERROR: Install tfswitch for use_terraform support"
+        return 1
+    fi
+
+    if ! test -d .terraform
+    then
+        mkdir .terraform 2>/dev/null
+    fi
+
+    if test -n $1
+    then
+        if [[ "${1}" =~ [0-9]+.[0-9]+.[0-9]+ ]]
+        then
+            INSTALL_VERSION=${1}
+        else
+            INSTALL_VERSION=$(curl --connect-timeout 1 --silent "https://api.github.com/repos/hashicorp/terraform/releases" 2>/dev/null | jq -r 'map(select(.tag_name | test("^v0.[0-9]+.[0-9]+$"))) | .[].tag_name' | sort -V | grep $1 | tail -1)
+        fi
+    else
+        INSTALL_VERSION=$(curl --connect-timeout 1 --silent "https://api.github.com/repos/hashicorp/terraform/releases" 2>/dev/null | jq -r 'map(select(.tag_name | test("^v0.[0-9]+.[0-9]+$"))) | .[].tag_name' | sort -V | tail -1)
+    fi
+    #  Remove leading v if present
+    INSTALL_VERSION=${INSTALL_VERSION#v}
+
+    tfswitch -b .terraform/terraform $INSTALL_VERSION
+
+    PATH_add .terraform
 }
 
 use_aws_sso() {
