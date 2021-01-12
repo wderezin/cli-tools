@@ -2,7 +2,7 @@
 
 function terraform --wraps terraform --description 'alias terraform=terraform'
     if command -q tfswitch
-        if count *.tf >0
+        if test (count *.tf) -gt 0
 
             test -d .terraform
             or mkdir .terraform
