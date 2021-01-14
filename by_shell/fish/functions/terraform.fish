@@ -8,20 +8,18 @@ function terraform --wraps terraform --description 'alias terraform=terraform'
             or mkdir .terraform
 
             if ! test -x .terraform/terraform
-                tfswitch -b .terraform/terraform
+                command tfswitch -b .terraform/terraform </dev/null 2>/dev/null
+                or echo "WARNING: required_version missing in .tf files"
             end
-
-            command .terraform/terraform $argv
-
-        else if command -q terraform
-
-            command terraform $argv
-
-        else
-            echo "ERROR: no .tf files or terraform in PATH"
-            return 1
         end
-    else
+    end
+
+    if test -x .terraform/terraform
+        .terraform/terraform $argv
+    else if command -q terraform
         command terraform $argv
+    else
+        echo "terraform: not configured for project"
+        return 1
     end
 end

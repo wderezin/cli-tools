@@ -30,9 +30,13 @@ function _git_print_path
     or set -l fish_prompt_pwd_dir_length 0
 
     set -q dare_prompt_git_path
-    or set -l dare_prompt_git_path true
+    or set -l dare_prompt_git_path 1
 
-    if $dare_prompt_git_path
+    set -q dare_prompt_seperator_on_missing
+    and $dare_prompt_seperator_on_missing
+    and set -l dare_prompt_seperator ' '
+
+    if is-enabled $dare_prompt_git_path
         set -l blue (set_color blue)
         set -l normal (set_color normal)
 
@@ -43,11 +47,11 @@ function _git_print_path
         # +2 to move just past /
         set -l tmp (string sub --start=(math (string length $git_path_prefix) + 2) $PWD)
 
-        if test $fish_prompt_pwd_dir_length -eq 0
-            echo -n /$tmp
-        else
+        if is-enabled $fish_prompt_pwd_dir_length
             # Shorten to at most $fish_prompt_pwd_dir_length characters per directory
             echo -n (string replace -ar '(\.?[^/]{'"$fish_prompt_pwd_dir_length"'})[^/]*/' '$1/' /$tmp)
+        else
+            echo -n /$tmp
         end
     else
         prompt_pwd
@@ -63,7 +67,7 @@ function _git_print_branch_info -a branch remote merge
     set -l ab (_git_ahead_behind_count $branch $remote $merge)
     if test (count $ab) -lt 2
         echo -n -s $red upstream-gone $normal '(' $yellow $branch $normal ')'
-    else if test $ab[1] -gt 0; or test $ab[2] -gt 0
+    else if is-any-enabled $ab[1] $ab[2]
         # In a standard git branch
         set ab_color $yellow
 

@@ -5,18 +5,24 @@
 # - Current directory name
 # - Git branch and dirty state (if inside a git repo)
 
-function dot-before
-    if set -l output (eval $argv)
-        echo -n -s ' · '
-        echo -n -s $output
-        return 0
-    end
-    return 1
-end
+# Defaults
+set -q dare_prompt_git_path
+or set dare_prompt_git_path true
 
-function dot-after
+set -q dare_prompt_seperator
+or set dare_prompt_seperator (set_color normal)' · '
+
+set -q dare_prompt_seperator_on_missing
+or set dare_prompt_seperator_on_missing 0
+
+function prompt-seperater
     if eval $argv
-        echo -n -s ' · '
+        if ! is-enabled $dare_prompt_seperator_on_missing
+            echo -n -s $dare_prompt_seperator
+            return 0
+        end
+    else if is-enabled $dare_prompt_seperator_on_missing
+        echo -n -s $dare_prompt_seperator
         return 0
     end
     return 1
@@ -41,13 +47,9 @@ function fish_prompt
     # `tput el` generate a clear to end of line
     echo -ne (tput el)
 
-    dot-after prompt_account
+    prompt-seperater prompt_account
 
-    dot-after prompt_env
-
-    # Need to make global so prompt_git sees it
-    set -q dare_prompt_git_path
-    or set -g dare_prompt_git_path true
+    prompt-seperater prompt_env
 
     if ! prompt_git
         prompt_pwd
