@@ -19,7 +19,7 @@ function prompt_pwd --description "Print the current working directory, shortene
 
     # This allows overriding fish_prompt_pwd_dir_length from the outside (global or universal) without leaking it
     set -q fish_prompt_pwd_dir_length
-    or set -l fish_prompt_pwd_dir_length 1
+    or set -l fish_prompt_pwd_dir_length 0
 
     # Replace $HOME with "~"
     set realhome ~

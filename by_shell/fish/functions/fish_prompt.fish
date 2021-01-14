@@ -7,7 +7,7 @@
 
 # Defaults
 set -q dare_prompt_git_path
-or set dare_prompt_git_path true
+or set dare_prompt_git_path 1
 
 set -q dare_prompt_seperator
 or set dare_prompt_seperator (set_color normal)' · '
