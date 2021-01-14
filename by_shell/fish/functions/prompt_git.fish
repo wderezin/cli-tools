@@ -32,8 +32,7 @@ function _git_print_path
     set -q dare_prompt_git_path
     or set -l dare_prompt_git_path 1
 
-    set -q dare_prompt_seperator_on_missing
-    and $dare_prompt_seperator_on_missing
+    is-enabled $dare_prompt_seperator_on_missing
     and set -l dare_prompt_seperator ' '
 
     if is-enabled $dare_prompt_git_path
