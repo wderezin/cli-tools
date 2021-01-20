@@ -8,5 +8,5 @@ function tfswitch --wraps tfswitch --description 'alias tfswitch=tfswitch'
     test -d .terraform
     or mkdir .terraform
 
-    command tfswitch -b .terraform/terraform $argv
+    command tfswitch -b .terraform/terraform $argv 1>&2
 end

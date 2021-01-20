@@ -8,7 +8,7 @@ function terraform --wraps terraform --description 'alias terraform=terraform'
             or mkdir .terraform
 
             if ! test -x .terraform/terraform
-                command tfswitch -b .terraform/terraform </dev/null 2>/dev/null
+                command tfswitch -b .terraform/terraform </dev/null 1>&2 2>/dev/null
                 or echo "WARNING: required_version missing in .tf files"
             end
         end
