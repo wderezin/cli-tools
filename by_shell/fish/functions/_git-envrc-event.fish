@@ -1,7 +1,7 @@
 
 # If a .envrc does not exist
 # and you are in a git repo
-# and if a any .*-envrc exist
+# and if a any .envrc-* exist
 # then create a .envrc to source the .*-envrc
 
 # ~/.config/fish/functions/create-envrc.fish
@@ -10,10 +10,12 @@ function _git-envrc-event --on-variable="PWD"
     set -l normal (set_color normal)
 
     if git rev-parse --git-dir >/dev/null 2>/dev/null
-        set -l files .*-envrc .envrc-*
+        set -l files .envrc-*
         if [ (count $files) -gt 0 ]
             for file in $files
-                if ! egrep -w "source_env(_if_exists)?\s+$file" .envrc >/dev/null 2>&1
+                set ext (string replace .envrc- '' $file)
+                echo search $ext
+                if ! egrep "source.*$ext" .envrc >/dev/null 2>&1
                     echo -s $red "Error direnv: missing $file, add \"source_env $file\" to .envrc" $normal ' '
                 end
             end

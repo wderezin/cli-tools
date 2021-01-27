@@ -4,6 +4,37 @@ nvm() {
     nvm $*
 }
 
+# Used in combination with shell.
+# Shell needs to check that DIRENV_RELOAD_ON_PWD is set when  PWD is changed
+# And when changed run direnv reload
+# Also, shell needs to set CURRENT_PWD to the current PWD so the sub directory can access the PWD.
+reload_on_pwd() {
+    export DIRENV_RELOAD_ON_PWD=1
+}
+
+daring_standard() {
+    reload_on_pwd
+    source_env_if_exists .envrc-local
+}
+
+source_ext() {
+    for X in $*
+    do
+        source_env .envrc-$X
+    done 
+}
+
+source_ext_if_exists() {
+    for X in $*
+    do
+        source_env_if_exists .envrc-$X
+    done 
+}
+
+source_local() {
+    source_env ~/.config/direnv/local/$1
+}
+
 export_alias() {
   local name=$1
   shift
@@ -111,6 +142,3 @@ use_aws_credentials() {
   watch_file ~/.aws/credentials
 }
 
-source_local() {
-    source_env ~/.config/direnv/local/$1
-}
