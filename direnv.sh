@@ -12,11 +12,6 @@ reload_on_pwd() {
     export DIRENV_RELOAD_ON_PWD=1
 }
 
-daring_standard() {
-    reload_on_pwd
-    source_env_if_exists .envrc-local
-}
-
 source_ext() {
     for X in $*
     do
