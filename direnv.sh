@@ -30,6 +30,10 @@ source_local() {
     source_env ~/.config/direnv/local/$1
 }
 
+source_local_if_exists() {
+    source_env_if_exists ~/.config/direnv/local/$1
+}
+
 export_alias() {
   local name=$1
   shift
@@ -58,7 +62,6 @@ PATH_brew() {
     PATH_add $DIR
   fi
 }
-
 
 use_terraform() {
     if ! which tfswitch >/dev/null 2>&1
