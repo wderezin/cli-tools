@@ -114,7 +114,8 @@ use_aws_sso() {
     eval $(cat $CACHE_FILE | jq -r 'to_entries|map("\(.key)=\"\(.value|tostring)\"")|.[]')
     # if current date > expiriation date
     # echo check exp $Expiration
-    if (( $(date +%s) > $(date -j -f "%Y-%m-%d %H:%M:%S%z" "$(echo $Expiration | perl -pe 's/:(\d\d)$/\1/; s/T/ /')" +%s) ))
+    ExpEpoch=$(date -j -f "%Y-%m-%d %H:%M:%S%z" "$(echo $Expiration | perl -pe 's/:(\d\d)$/\1/; s/T/ /')" +%s)
+    if [[ "$ExpEpoch" == "" ]] || (( $(date +%s) > $ExpEpoch ))
     then
         echo "Caching AWS credentials $CACHE_FILE"
         aws2-wrap --profile ${AWS_PROFILE}  --process > $CACHE_FILE
