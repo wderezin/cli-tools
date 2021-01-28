@@ -5,7 +5,7 @@
 # then create a .envrc to source the .*-envrc
 
 # ~/.config/fish/functions/create-envrc.fish
-function _git-envrc-event --on-variable="PWD"
+function _git-envrc-event --on-event pwd_change_prompt
     set -l red (set_color red)
     set -l normal (set_color normal)
 
@@ -14,7 +14,6 @@ function _git-envrc-event --on-variable="PWD"
         if [ (count $files) -gt 0 ]
             for file in $files
                 set ext (string replace .envrc- '' $file)
-                echo search $ext
                 if ! egrep "source.*$ext" .envrc >/dev/null 2>&1
                     echo -s $red "Error direnv: missing $file, add \"source_env $file\" to .envrc" $normal ' '
                 end

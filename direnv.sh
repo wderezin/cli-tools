@@ -129,8 +129,6 @@ use_aws_sso() {
 
     watch_file $CACHE_FILE
   fi
-
-  
 }
 
 use_aws_credentials() {
@@ -160,4 +158,3 @@ use_aws_credentials() {
 
   watch_file ~/.aws/credentials
 }
-
