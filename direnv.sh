@@ -107,7 +107,7 @@ use_aws_sso() {
     if ! test -e "$CACHE_FILE"
     then
         echo "Caching AWS credentials $CACHE_FILE"
-        test -d $CACHE_DIR || mkdir $CACHE_DIR
+        test -d $CACHE_DIR || mkdir -p $CACHE_DIR
         aws2-wrap --profile ${AWS_PROFILE}  --process > $CACHE_FILE
     fi
 
