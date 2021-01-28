@@ -99,17 +99,38 @@ use_aws_sso() {
     export AWS_PROFILE=$1
   fi 
 
+  CACHE_DIR=~/.config/direnv/use_aws_sso_cache
+  CACHE_FILE=${CACHE_DIR}/${AWS_PROFILE}
+
   if [ -n "${AWS_PROFILE}" ]
   then
-    eval $(aws2-wrap --profile ${AWS_PROFILE}  --process | jq -r 'to_entries|map("\(.key)=\"\(.value|tostring)\"")|.[]')
+    if ! test -e "$CACHE_FILE"
+    then
+        echo "Caching AWS credentials $CACHE_FILE"
+        test -d $CACHE_DIR || mkdir $CACHE_DIR
+        aws2-wrap --profile ${AWS_PROFILE}  --process > $CACHE_FILE
+    fi
+
+    eval $(cat $CACHE_FILE | jq -r 'to_entries|map("\(.key)=\"\(.value|tostring)\"")|.[]')
+    # if current date > expiriation date
+    # echo check exp $Expiration
+    if (( $(date +%s) > $(date -j -f "%Y-%m-%d %H:%M:%S%z" "$(echo $Expiration | perl -pe 's/:(\d\d)$/\1/; s/T/ /')" +%s) ))
+    then
+        echo "Caching AWS credentials $CACHE_FILE"
+        aws2-wrap --profile ${AWS_PROFILE}  --process > $CACHE_FILE
+        eval $(cat $CACHE_FILE | jq -r $JQ_EXTRACT)
+    fi
+
     export AWS_ACCESS_KEY_ID=$AccessKeyId
     export AWS_SECRET_ACCESS_KEY=$SecretAccessKey
     export AWS_SESSION_TOKEN=$SessionToken
     export AWS_EXPIRATION=$Expiration
     export AWS_REGION=${AWS_REGION-us-esat-1}
+
+    watch_file $CACHE_FILE
   fi
 
-  watch_file  ~/.aws/sso/cache/*.json
+  
 }
 
 use_aws_credentials() {
