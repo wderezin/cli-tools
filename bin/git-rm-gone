@@ -20,3 +20,23 @@ done
 
 git fetch --prune origin '+refs/tags/*:refs/tags/*'
 #git fetch --tags
+
+
+# > cat git-prune
+# #!/usr/bin/env bash
+# git fetch -p
+# echo
+# pruned_branches=$(git branch --v | grep "\[gone\]")
+# echo "$pruned_branches"
+# if [[ $pruned_branches ]]; then
+#   echo
+#   read -p "Do you want to delete these branches? " -n 1 -r
+#   echo
+#   if [[ ! $REPLY =~ ^[Yy]$ ]]
+#   then
+#       exit 1
+#   fi
+#   git branch --v | grep "\[gone\]" | awk '{print $1}' | xargs git branch -D
+# else
+#   echo "No local branches had their remotes deleted."
+# fi

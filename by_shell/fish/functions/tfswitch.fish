@@ -5,8 +5,10 @@ function tfswitch --wraps tfswitch --description 'alias tfswitch=tfswitch'
         return 1
     end
 
-    test -d .terraform
-    or mkdir .terraform
+    if ! test -d .terraform
+        mkdir .terraform
+        tm-exclude .terraform
+    end
 
     command tfswitch -b .terraform/terraform $argv 1>&2
 end

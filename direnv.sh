@@ -1,4 +1,5 @@
 
+
 nvm() {
     source $(brew --prefix nvm)/nvm.sh --no-use
     nvm $*
@@ -91,6 +92,20 @@ use_terraform() {
     PATH_add .terraform
 }
 
+date-to-epoch() {
+    input=$(echo "$1" | perl -pe 's/:(\d\d)$/\1/; s/T/ /')
+    epoch=$(date -j -f "%Y-%m-%d %H:%M:%S%z" "$input" +%s 2>/dev/null)
+    if [[ ! -n "$epoch" ]]
+    then
+        epoch=$(date -j -f  "$1" "+%s" 2>/dev/null)
+    fi
+    if [[ ! -n "$epoch" ]]
+    then
+        epoch=0
+    fi
+    echo $epoch
+}
+
 use_aws_sso() {
   AWS_REGION=${AWS_REGION-us-east-1}
 
@@ -99,42 +114,37 @@ use_aws_sso() {
     export AWS_PROFILE=$1
   fi 
 
-  CACHE_DIR=~/.config/direnv/use_aws_sso_cache
-  CACHE_FILE=${CACHE_DIR}/${AWS_PROFILE}
-
   if [ -n "${AWS_PROFILE}" ]
   then
-    if ! test -e "$CACHE_FILE"
-    then
-        echo "Caching AWS credentials $CACHE_FILE"
-        test -d $CACHE_DIR || mkdir -p $CACHE_DIR
-        aws2-wrap --profile ${AWS_PROFILE}  --process > $CACHE_FILE
-    fi
-
-    eval $(cat $CACHE_FILE | jq -r 'to_entries|map("\(.key)=\"\(.value|tostring)\"")|.[]')
-    # if current date > expiriation date
-    # echo check exp $Expiration
-    if [[ "$Expiration" == "" ]] 
-    then
-        ExpEpoch=0
-    else
-        ExpEpoch=$(date -j -f "%Y-%m-%d %H:%M:%S%z" "$(echo $Expiration | perl -pe 's/:(\d\d)$/\1/; s/T/ /')" +%s)
-    fi
-    if (( $(date +%s) > $ExpEpoch ))
-    then
-        echo "Caching AWS credentials $CACHE_FILE"
-        aws2-wrap --profile ${AWS_PROFILE}  --process > $CACHE_FILE
-        eval $(cat $CACHE_FILE | jq -r $JQ_EXTRACT)
-    fi
-
+    eval $(aws2-wrap --profile ${AWS_PROFILE}  --process | jq -r 'to_entries|map("\(.key)=\"\(.value|tostring)\"")|.[]')
     export AWS_ACCESS_KEY_ID=$AccessKeyId
     export AWS_SECRET_ACCESS_KEY=$SecretAccessKey
     export AWS_SESSION_TOKEN=$SessionToken
     export AWS_EXPIRATION=$Expiration
     export AWS_REGION=${AWS_REGION-us-esat-1}
-
-    watch_file $CACHE_FILE
   fi
+
+  watch_file  ~/.aws/sso/cache/*.json
+}
+
+use_aws_sso_creds() {
+  AWS_REGION=${AWS_REGION-us-east-1}
+
+  if test -n "$1"
+  then
+    export AWS_PROFILE=$1
+  fi 
+
+  if [ -n "${AWS_PROFILE}" ]
+  then
+    export AWS_EXPIRATION=$(aws2-wrap --generate --profile ${AWS_PROFILE} --outprofile ${AWS_PROFILE}-creds |  grep "credentials will expire" | awk -e '{print $6}')
+    export AWS_PROFILE=${AWS_PROFILE}-creds
+    export AWS_REGION=${AWS_REGION-us-esat-1}
+    
+    #  TODO pull AWS_EXPIRATION from output of aws2-wrap
+  fi
+
+  watch_file  ~/.aws/credentials
 }
 
 use_aws_credentials() {

@@ -28,6 +28,14 @@ function prompt-seperater
     return 1
 end
 
+function prompt-newline
+    if eval $argv
+        echo
+        return 0
+    end
+    return 1
+end
+
 function fish_prompt
     set -l last_status $status
 
@@ -47,7 +55,11 @@ function fish_prompt
     # `tput el` generate a clear to end of line
     echo -ne (tput el)
 
-    prompt-seperater prompt_account
+    if is-enabled $dare_prompt_account_newline
+        prompt-newline prompt_account
+    else
+        prompt-seperater prompt_account
+    end
 
     prompt-seperater prompt_env
 

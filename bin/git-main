@@ -1,0 +1,51 @@
+#1/usr/bin/env bash
+
+#!/usr/bin/env bash
+# Local:
+# https://stackoverflow.com/questions/21151178/shell-script-to-check-if-specified-git-branch-exists
+# test if the branch is in the local repository.
+# return 1 if the branch exists in the local, or 0 if not.
+function is_in_local() {
+    local branch=${1}
+    local existed_in_local=$(git branch --list ${branch})
+    if [[ -z ${existed_in_local} ]]; then
+        echo 0
+    else
+        echo 1
+    fi
+}
+# Remote:
+# Ref: https://stackoverflow.com/questions/8223906/how-to-check-if-remote-branch-exists-on-a-given-remote-repository
+# test if the branch is in the remote repository.
+# return 1 if its remote branch exists, or 0 if not.
+function is_in_remote() {
+    local branch=${1}
+    local existed_in_remote=$(git ls-remote --heads origin ${branch})
+    if [[ -z ${existed_in_remote} ]]; then
+        echo 0
+    else
+        echo 1
+    fi
+}
+function checkout_main() {
+  if [ $(is_in_local "main") -eq 1 ]; then
+    git checkout main
+    echo "Moved to main branch"
+    return 0
+  fi
+  if [ $(is_in_local "develop") -eq 1 ]; then
+    git checkout develop
+    echo "Moved to develop branch"
+    return 0
+  fi
+  if [ $(is_in_remote "main") -eq 1 ]; then
+    git checkout -t origin/main
+    echo "Moved to main branch and setup tracking branch"
+    return 0
+  fi
+  git checkout master
+  echo "Moved to master branch"
+}
+
+checkout_main
+git pull

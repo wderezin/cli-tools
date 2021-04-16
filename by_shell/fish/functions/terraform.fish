@@ -4,8 +4,10 @@ function terraform --wraps terraform --description 'alias terraform=terraform'
     if command -q tfswitch
         if test (count *.tf) -gt 0
 
-            test -d .terraform
-            or mkdir .terraform
+            if ! test -d .terraform
+                mkdir .terraform
+                tm-exclude .terraform
+            end
 
             if ! test -x .terraform/terraform
                 command tfswitch -b .terraform/terraform </dev/null 1>&2 2>/dev/null
