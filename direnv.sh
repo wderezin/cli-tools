@@ -140,11 +140,11 @@ use_aws_sso_creds() {
     export AWS_EXPIRATION=$(aws2-wrap --generate --profile ${AWS_PROFILE} --outprofile ${AWS_PROFILE}-creds |  grep "credentials will expire" | awk -e '{print $6}')
     export AWS_PROFILE=${AWS_PROFILE}-creds
     export AWS_REGION=${AWS_REGION-us-esat-1}
-    
+    export AWS_SDK_LOAD_CONFIG=1
     #  TODO pull AWS_EXPIRATION from output of aws2-wrap
   fi
 
-  watch_file  ~/.aws/credentials
+  watch_file  ~/.aws/sso/cache/*.json
 }
 
 use_aws_credentials() {

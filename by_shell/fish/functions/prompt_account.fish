@@ -25,6 +25,7 @@ function prompt_account
     set -l yellow (set_color yellow)
     set -l blue (set_color blue)
     set -l green (set_color green)
+    set -l greentint (set_color #78c288)
     set -l normal (set_color $fish_color_normal)
     set -l error (set_color $fish_color_error)
 
@@ -36,7 +37,7 @@ function prompt_account
     if _awsChanged
         if test -n $AWS_PROFILE; or test -n $AWS_ACCESS_KEY_ID
             if command aws sts get-caller-identity >/dev/null 2>&1
-                set -g prompt_aws_access_color (set_color green)
+                set -g prompt_aws_access_color (set_color $greentint)
             else
                 set -g prompt_aws_access_color $error
             end
