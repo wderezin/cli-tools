@@ -2,7 +2,7 @@
 
 function terraform --wraps terraform --description 'alias terraform=terraform'
     if command -q tfswitch
-        if test (count *.tf) -gt 0
+        if test (count *.tf) -gt 0 && test (grep required_version *.tf | wc -l ) -gt 0
 
             if ! test -d .terraform
                 mkdir .terraform
@@ -18,6 +18,8 @@ function terraform --wraps terraform --description 'alias terraform=terraform'
 
     if test -x .terraform/terraform
         .terraform/terraform $argv
+    else if test -x ../.terraform/terraform
+        ../.terraform/terraform $argv
     else if command -q terraform
         command terraform $argv
     else

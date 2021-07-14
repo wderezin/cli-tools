@@ -169,7 +169,7 @@ use_aws_credentials() {
     export AWS_CREDS_CHANGED="$(date)"
   fi
 
-  export AWS_REGION=${AWS_REGION-us-esat-1}
+  export AWS_REGION=${AWS_REGION-us-east-1}
   export AWS_SDK_LOAD_CONFIG=${AWS_SDK_LOAD_CONFIG-yes}
 
   watch_file ~/.aws/credentials
