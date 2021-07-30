@@ -16,6 +16,10 @@ function terraform --wraps terraform --description 'alias terraform=terraform'
         end
     end
 
+    if test -x tf_before
+        ./tf_before &
+    end
+
     if test -x .terraform/terraform
         .terraform/terraform $argv
     else if test -x ../.terraform/terraform
@@ -25,5 +29,9 @@ function terraform --wraps terraform --description 'alias terraform=terraform'
     else
         echo "terraform: not configured for project"
         return 1
+    end
+
+    if test -x tf_after
+        ./tf_after
     end
 end
