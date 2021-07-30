@@ -107,7 +107,7 @@ date-to-epoch() {
 }
 
 use_aws_sso() {
-  AWS_REGION=${AWS_REGION-us-east-1}
+  AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION-us-east-1}
 
   if test -n "$1"
   then
@@ -121,14 +121,14 @@ use_aws_sso() {
     export AWS_SECRET_ACCESS_KEY=$SecretAccessKey
     export AWS_SESSION_TOKEN=$SessionToken
     export AWS_EXPIRATION=$Expiration
-    export AWS_REGION=${AWS_REGION-us-esat-1}
+    export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION-us-esat-1}
   fi
 
   watch_file  ~/.aws/sso/cache/*.json
 }
 
 use_aws_sso_creds() {
-  AWS_REGION=${AWS_REGION-us-east-1}
+  AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION-us-east-1}
 
   if test -n "$1"
   then
@@ -139,7 +139,7 @@ use_aws_sso_creds() {
   then
     export AWS_EXPIRATION=$(aws2-wrap --generate --profile ${AWS_PROFILE} --outprofile ${AWS_PROFILE}-creds |  grep "credentials will expire" | awk -e '{print $6}')
     export AWS_PROFILE=${AWS_PROFILE}-creds
-    export AWS_REGION=${AWS_REGION-us-esat-1}
+    export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION-us-esat-1}
     export AWS_SDK_LOAD_CONFIG=1
     #  TODO pull AWS_EXPIRATION from output of aws2-wrap
   fi
@@ -148,7 +148,7 @@ use_aws_sso_creds() {
 }
 
 use_aws_credentials() {
-  AWS_REGION=${AWS_REGION-us-east-1}
+  AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION-us-east-1}
 
   if test -n "$1"
   then
@@ -169,7 +169,7 @@ use_aws_credentials() {
     export AWS_CREDS_CHANGED="$(date)"
   fi
 
-  export AWS_REGION=${AWS_REGION-us-east-1}
+  export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION-us-east-1}
   export AWS_SDK_LOAD_CONFIG=${AWS_SDK_LOAD_CONFIG-yes}
 
   watch_file ~/.aws/credentials
