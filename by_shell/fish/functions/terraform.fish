@@ -34,4 +34,9 @@ function terraform --wraps terraform --description 'alias terraform=terraform'
     if test -x tf_after
         ./tf_after
     end
+
+    if test -n "(jobs -p)"
+        pkill -g (jobs -p)
+    end
+
 end
