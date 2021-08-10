@@ -16,8 +16,13 @@ function terraform --wraps terraform --description 'alias terraform=terraform'
         end
     end
 
-    if test -x tf_before
-        ./tf_before &
+    if contains $argv[1] plan apply destroy
+        if test -x tf_background
+            ./tf_background &
+        end
+        if test -x tf_before
+            ./tf_before
+        end
     end
 
     if test -x .terraform/terraform
@@ -31,12 +36,14 @@ function terraform --wraps terraform --description 'alias terraform=terraform'
         return 1
     end
 
-    if test -x tf_after
-        ./tf_after
-    end
+    if contains $argv[1] plan apply destroy
+        if test -x tf_after
+            ./tf_after
+        end
 
-    if test -n "(jobs -p)"
-        pkill -g (jobs -p)
+        if jobs -p >/dev/null
+            pkill -g (jobs -p)
+        end
     end
 
 end
