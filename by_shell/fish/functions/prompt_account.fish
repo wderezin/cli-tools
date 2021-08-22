@@ -31,13 +31,13 @@ function prompt_account
 
     # Display [venvname] if in a virtualenv
     if set -q VIRTUAL_ENV
-        set -a acc_info $prompt_aws_access_color'VENV:'(string lower(basename $VIRTUAL_ENV))$normal
+        set -a acc_info $green'VENV:'(string lower(basename $VIRTUAL_ENV))$normal
     end
 
     if _awsChanged
         if test -n $AWS_PROFILE; or test -n $AWS_ACCESS_KEY_ID
             if command aws sts get-caller-identity >/dev/null 2>&1
-                set -g prompt_aws_access_color (set_color $greentint)
+                set -g prompt_aws_access_color $greentint
             else
                 set -g prompt_aws_access_color $error
             end
@@ -70,9 +70,9 @@ function prompt_account
     end
 
     if set -q AWS_PROFILE
-        set -a acc_info $prompt_aws_access_color$prompt_aws_prefix':'(string lower $AWS_PROFILE)$normal
+        set -a acc_info "$prompt_aws_access_color$prompt_aws_prefix:"(string lower $AWS_PROFILE)"$normal"
     else if set -q AWS_ACCESS_KEY_ID
-        set -a acc_info $prompt_aws_access_color$prompt_aws_prefix':'(string lower (string sub --start=-4 $AWS_ACCESS_KEY_ID))$normal
+        set -a acc_info "$prompt_aws_access_color$prompt_aws_prefix:"(string lower (string sub --start=-4 $AWS_ACCESS_KEY_ID))"$normal"
     end
 
     if set -q IBM_PROFILE
