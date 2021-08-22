@@ -1,5 +1,5 @@
 
-function is-bsd --description "Only eval <COMMAND> if on a BSD system, including Mac OS X"
+function if-bsd --description "Only eval <COMMAND> if on a BSD system, including Mac OS X"
 
     if not contains (uname -s) Darwin BSD bsd
         return 1
