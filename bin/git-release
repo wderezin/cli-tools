@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+
+TAG=$1
+
+function usage
+{
+  if [[ "$*" != "" ]]
+  then
+      echo "ERROR:" $* 1>&2
+  fi
+  echo "Usage: git-release [major|minor|patch]" 1>&2
+  exit 1
+}
+
+function fail
+{
+  echo "ERROR:" $* 1>&2
+  exit 2
+}
+
+# Lots of parameter substituion: https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html
+shopt -s extglob
+VERSION_PATTERN='v?([0-9]).+([0-9]).+([0-9])?(-*)'
+
+CURRENT_VERSION=$( git tag -l | egrep "^${VERSION_PATTERN}" | sort -n | tail -1)
+if [[ "$CURRENT_VERSION" == v* || "$CURRENT_VERSION" == "" ]] 
+then
+    PREFIX="v"
+fi
+CURRENT_VERSION=${CURRENT_VERSION#v}
+CURRENT_VERSION=${CURRENT_VERSION:=0.0.0}
+
+MAJOR=$(echo $CURRENT_VERSION | cut -d. -f1)
+MINOR=$(echo $CURRENT_VERSION | cut -d. -f2)
+PATCH=$(echo $CURRENT_VERSION | cut -d. -f3)
+
+case $1 in
+  major)
+    MAJOR=$(( $MAJOR + 1 ))
+    MINOR=0
+    PATCH=0
+    ;;
+  minor)
+    MINOR=$(( $MINOR + 1 ))
+    PATCH=0
+    ;;
+  patch)
+    PATCH=$(( $PATCH + 1 ))
+    ;;
+  *)
+    usage
+    ;;
+esac
+
+RELEASE_VERSION="${PREFIX}${MAJOR}.${MINOR}.${PATCH}"
+
+# Used to generate module README.md
+REPO_DIR=$(git rev-parse --show-toplevel)
+
+function do_checks {
+  [[ "${CURRENT_VERSION}" == "" ]] && usage "could not find any version tags for module"
+
+  if [[ "$(git rev-parse --abbrev-ref HEAD)" != "main" && "$(git rev-parse --abbrev-ref HEAD)" != "master" ]]
+  then
+    echo -n "NOT on main branch, continue [y|N] "
+    read answer
+    if [[ "${answer}" != "y" ]]
+    then
+      echo "Aborting"
+      exit 3
+    fi
+  fi
+}
+
+do_checks
+
+# Make sure we are on HEAD
+git pull || fail "git pull failed trying to move to head of branch"
+
+function cleanup {
+  rm /tmp/notes-$$ 2>/dev/null
+}
+trap cleanup EXIT
+
+NOTES=/tmp/notes-$$
+git show -s --format=%s >> $NOTES
+echo >> $NOTES
+echo "# Enter release notes for ${RELEASE_VERSION}" >> $NOTES
+echo "# Initial notes are the last commit message" >> $NOTES
+echo "# Lines starting wtih '#' will be ignored. " >> $NOTES
+echo "# An empty message will abort the tag." >> $NOTES
+EDITOR=${EDITOR:-vi}
+$EDITOR $NOTES
+
+if [[ "$(cat $NOTES | egrep -v '^#|^\s*$' )"  == "" ]]
+then
+  echo "ABORTING: Missing release notes"
+  rm $NOTES
+  exit 1
+fi
+
+echo "Creating Release ${RELEASE_VERSION}"
+git tag -a "${RELEASE_VERSION}" -m "Release ${RELEASE_VERSION}
+$(cat $NOTES | grep -v '^#') "
+rm $NOTES
+
+git push origin "${RELEASE_VERSION}"
