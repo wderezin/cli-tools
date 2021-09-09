@@ -16,7 +16,19 @@ function terraform --wraps terraform --description 'alias terraform=terraform'
         end
     end
 
+    set tf_proxifier eval
+
     if contains $argv[1] plan apply destroy
+        if set -q TF_PROXY_SERVER
+            set port (random 10000 15000)
+            aws-ec2-ssh -D $port -N $TF_PROXY_SERVER &
+            sleep 3 # need to wait for ssh, switch to nc checking on port open
+
+            set -x ALL_PROXY socks5://127.0.0.1:$port/
+            set -x HTTPS_PROXY socks5://127.0.0.1:$port/
+            set -x HTTP_PROXY socks5://127.0.0.1:$port/
+        end
+
         if test -x tf_background
             ./tf_background &
         end
@@ -26,11 +38,11 @@ function terraform --wraps terraform --description 'alias terraform=terraform'
     end
 
     if test -x .terraform/terraform
-        .terraform/terraform $argv
+        $tf_proxifier .terraform/terraform $argv
     else if test -x ../.terraform/terraform
-        ../.terraform/terraform $argv
+        $tf_proxifier ../.terraform/terraform $argv
     else if command -q terraform
-        command terraform $argv
+        $tf_proxifier command terraform $argv
     else
         echo "terraform: not configured for project"
         return 1
