@@ -69,10 +69,18 @@ function prompt_account
         end
     end
 
+    if set -q AWS_REGION
+        set -g prompt_aws_region $AWS_REGION
+    else if set -q AWS_DEFAULT_REGION
+        set -g prompt_aws_region $AWS_DEFAULT_REGION
+    else
+        set -g prompt_aws_region "DEFAULT"
+    end
+
     if set -q AWS_PROFILE
-        set -a acc_info "$prompt_aws_access_color$prompt_aws_prefix:"(string lower $AWS_PROFILE)"$normal"
+        set -a acc_info "$prompt_aws_access_color$prompt_aws_prefix:"(string lower $AWS_PROFILE):$prompt_aws_region"$normal"
     else if set -q AWS_ACCESS_KEY_ID
-        set -a acc_info "$prompt_aws_access_color$prompt_aws_prefix:"(string lower (string sub --start=-4 $AWS_ACCESS_KEY_ID))"$normal"
+        set -a acc_info "$prompt_aws_access_color$prompt_aws_prefix:"(string lower (string sub --start=-4 $AWS_ACCESS_KEY_ID)):$prompt_aws_region"$normal"
     end
 
     if set -q IBM_PROFILE
