@@ -75,7 +75,7 @@ function fish_prompt
         set ERROR_PROMPT "[$last_status]"
     end
 
-    if test $USER = 'root'
+    if test $USER = root
         set PROMPT_CHAR '$'
     else
         set PROMPT_CHAR '#'

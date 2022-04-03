@@ -1,5 +1,6 @@
 
-function prompt_pwd --description "Print the current working directory, shortened to fit the prompt"
+# No Longer Used, using fish prompt_pwd
+function prompt_dare_pwd --description "Print the current working directory, shortened to fit the prompt"
 
     set -l cyan (set_color cyan)
     set -l yellow (set_color yellow)
@@ -8,7 +9,7 @@ function prompt_pwd --description "Print the current working directory, shortene
     set -l green (set_color green)
     set -l normal (set_color normal)
 
-    set -l options 'h/help'
+    set -l options h/help
     argparse -n prompt_pwd --max-args=0 $options -- $argv
     or return
 
@@ -16,6 +17,7 @@ function prompt_pwd --description "Print the current working directory, shortene
         __fish_print_help prompt_pwd
         return 0
     end
+
 
     # This allows overriding fish_prompt_pwd_dir_length from the outside (global or universal) without leaking it
     set -q fish_prompt_pwd_dir_length

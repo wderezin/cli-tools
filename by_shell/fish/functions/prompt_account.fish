@@ -20,18 +20,22 @@ function _awsChanged
     return 0
 end
 
+
 function prompt_account
+
     set -l cyan (set_color cyan)
     set -l yellow (set_color yellow)
     set -l blue (set_color blue)
     set -l green (set_color green)
-    set -l greentint (set_color #78c288)
+    set -l greentint (set_color '#78c288')
     set -l normal (set_color $fish_color_normal)
     set -l error (set_color $fish_color_error)
 
+
     # Display [venvname] if in a virtualenv
     if set -q VIRTUAL_ENV
-        set -a acc_info $green'VENV:'(string lower(basename $VIRTUAL_ENV))$normal
+        echo here
+        set -a acc_info $green'VENV:'(string lower (basename $VIRTUAL_ENV))$normal
     end
 
     if _awsChanged
@@ -43,7 +47,7 @@ function prompt_account
             end
         end
 
-        set -g prompt_aws_prefix 'AWS'
+        set -g prompt_aws_prefix AWS
         _setPreviousAWS
 
         set -e aws_expiration_epoch
@@ -65,7 +69,7 @@ function prompt_account
             set prompt_aws_prefix '(expiring)AWS'
         else
             set -g prompt_aws_access_color $green
-            set prompt_aws_prefix 'AWS'
+            set prompt_aws_prefix AWS
         end
     end
 
@@ -74,7 +78,7 @@ function prompt_account
     else if set -q AWS_DEFAULT_REGION
         set -g prompt_aws_region $AWS_DEFAULT_REGION
     else
-        set -g prompt_aws_region "DEFAULT"
+        set -g prompt_aws_region DEFAULT
     end
 
     if set -q AWS_PROFILE

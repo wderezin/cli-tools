@@ -118,7 +118,7 @@ function prompt_git
             echo -n -s $red 'untracked(' $branch ')'
             echo -n -s $normal (_git_print_local_change_count)
             return 0
-        else if git branch -l HEAD 2>/dev/null | grep 'detached' >/dev/null
+        else if git branch -l HEAD 2>/dev/null | grep detached >/dev/null
             # Detached branch
             echo -n -s (_git_print_path)
             echo -n -s $red '(detached)'
