@@ -54,8 +54,8 @@ function prompt_account
         if test -n "$AWS_EXPIRATION"
             set -g aws_expiration_epoch (date-to-epoch $AWS_EXPIRATION)
             if test -z "$aws_expiration_epoch"
+                echo -s $error "ERROR: prompt_account failed to parse AWS_EXPIRATION, $aws_expiration_epoch" $normal
                 set -e aws_expiration_epoch
-                echo -s $error "ERROR: prompt_account failed to parse AWS_EXPIRATION" $normal
             end
         end
     end
