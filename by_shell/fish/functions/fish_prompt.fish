@@ -85,7 +85,7 @@ function fish_prompt
     end
 
 
-    if is-enabled $dare_prompt_amplify_env_check; and set -q AMPLIFY_ENV; and test $AMPLIFY_ENV != (string sub -s 1 -l 10 $GIT_BRANCH)
+    if is-enabled $dare_prompt_amplify_env_check; and set -q AMPLIFY_ENV; and set -q GIT_BRANCH; and test "$AMPLIFY_ENV" != (string sub -s 1 -l 10 "$GIT_BRANCH")
         echo
         echo -n -s $yellow ">> WARNING: amplify env $AMPLIFY_ENV does not match git branch $GIT_BRANCH"
     end

@@ -95,8 +95,16 @@ function prompt_git
     set -l green (set_color green)
     set -l normal (set_color normal)
 
-    set -g GIT_BRANCH (_git_branch_name)
-    set -l branch $GIT_BRANCH
+    set GIT_DIR (_git_path_prefix)
+    if test $GIT_DIR = ""
+        set -e GIT_DIR
+        set -e GIT_BRANCH
+        return 1
+    end
+
+    set -l branch (_git_branch_name)
+    set -g GIT_BRANCH $branch
+
     set -l remote (_git_remote_name $branch)
     set -l merge (_git_merge_name $branch)
 
