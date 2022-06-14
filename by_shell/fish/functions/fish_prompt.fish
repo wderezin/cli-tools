@@ -5,7 +5,7 @@
 # - Current directory name
 # - Git branch and dirty state (if inside a git repo)
 
-# Defaults
+# Defaults (0 = disabled, 1 = enabled)
 set -q dare_prompt_git_path
 or set dare_prompt_git_path 1
 
@@ -14,6 +14,9 @@ or set dare_prompt_seperator (set_color normal)' · '
 
 set -q dare_prompt_seperator_on_missing
 or set dare_prompt_seperator_on_missing 0
+
+set -q dare_prompt_amplify_env_check
+or set dare_prompt_amplify_env_check 1
 
 function prompt-seperater
     if eval $argv
@@ -79,6 +82,12 @@ function fish_prompt
         set PROMPT_CHAR '$'
     else
         set PROMPT_CHAR '#'
+    end
+
+
+    if is-enabled $dare_prompt_amplify_env_check; and set -q AMPLIFY_ENV; and test $AMPLIFY_ENV != (string sub -s 1 -l 10 $GIT_BRANCH)
+        echo
+        echo -n -s $yellow ">> WARNING: amplify env $AMPLIFY_ENV does not match git branch $GIT_BRANCH"
     end
 
     # Terminate with a nice prompt char
