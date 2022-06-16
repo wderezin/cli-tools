@@ -88,19 +88,23 @@ function _git_print_branch_info -a branch remote merge
 end
 
 function prompt_git
+
+    # Check if we are in a git directory
+    # if git rev-parse --show-toplevel 2>/dev/null >/dev/null
+    if in-git
+        set GIT_DIR (_git_path_prefix)
+    else
+        set -e GIT_DIR
+        set -e GIT_BRANCH
+        return 1
+    end
+
     set -l cyan (set_color cyan)
     set -l yellow (set_color yellow)
     set -l red (set_color red)
     set -l blue (set_color blue)
     set -l green (set_color green)
     set -l normal (set_color normal)
-
-    set GIT_DIR (_git_path_prefix)
-    if test $GIT_DIR = ""
-        set -e GIT_DIR
-        set -e GIT_BRANCH
-        return 1
-    end
 
     set -l branch (_git_branch_name)
     set -g GIT_BRANCH $branch
