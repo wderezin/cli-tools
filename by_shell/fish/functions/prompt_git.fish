@@ -27,7 +27,7 @@ function _git_print_local_change_count
     end
 end
 
-function _git_print_path
+function _git_print_path -a remote
 
     # This allows overriding fish_prompt_pwd_dir_length from the outside (global or universal) without leaking it
     set -q fish_prompt_pwd_dir_length
@@ -45,7 +45,12 @@ function _git_print_path
 
         set -l git_path_prefix (command git rev-parse --show-toplevel)
 
-        echo -n 'git:'$blue(basename $git_path_prefix)
+        if test $remote
+            set -l repo_name (basename (git remote get-url --push $remote))
+            echo -n 'git:'$blue(basename $repo_name)
+        else
+            echo -n 'git:'$blue(basename $git_path_prefix)
+        end
 
         # +2 to move just past /
         set -l tmp (string sub --start=(math (string length $git_path_prefix) + 2) $PWD)
@@ -119,21 +124,21 @@ function prompt_git
         # Show git branch and status
         if test $branch; and test $remote
             # Tracked branch
-            echo -n -s (_git_print_path)
+            echo -n -s (_git_print_path $remote)
             echo -n -s $dare_prompt_seperator
             echo -n -s (_git_print_branch_info $branch $remote $merge)
             echo -n -s $normal (_git_print_local_change_count)
             return 0
         else if test $branch
             # Untrack branch
-            echo -n -s (_git_print_path)
+            echo -n -s (_git_print_path $remote)
             echo -n -s $dare_prompt_seperator
             echo -n -s $red 'untracked(' $branch ')'
             echo -n -s $normal (_git_print_local_change_count)
             return 0
         else if git branch -l HEAD 2>/dev/null | grep detached >/dev/null
             # Detached branch
-            echo -n -s (_git_print_path)
+            echo -n -s (_git_print_path $remote)
             echo -n -s $red '(detached)'
             echo -n -s $normal (_git_print_local_change_count)
             return 0

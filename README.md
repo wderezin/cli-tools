@@ -3,6 +3,17 @@
 A set of cli tools for Mac and Linux environments with a focus on the [fish shell](https://fishshell.com).  
 For non fish features bash and zsh are also supported.
 
+# Container Dotfiles Setup
+
+Add the followig lines to your VSCode `settings.json` file.
+
+On Mac: ` ~/Library/Application\ Support/Code/User/settings.json`
+
+```
+    "dotfiles.repository": "https://github.com/wderezin/cli-tools",
+    "terminal.integrated.defaultProfile.linux": "fish",
+```
+
 # 1 Step Installation 
 
 Clone this repo and run the install script which will it for fish, bash, and zsh if they are installed. 
@@ -12,15 +23,7 @@ If you want install in a location other then your HOME change the `cd` command.
 cd ~; git clone https://github.com/daringway/cli-tools.git; ./cli-tools/install.sh
 ``` 
 
-# Fish Setting
-
-To see list of current settings in the fish shell
-```
-dare-config           # brief 
-dare-config --details # detail information
-```
-
-# Dare Prompt
+# Fish Daring Prompt
 
 ```
 [ <Account Information> ] · <CWD>  ·  <GIT Remote> ( <GIT BRANCH INFO> ) <GIT LOCAL INFO>
