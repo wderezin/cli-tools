@@ -13,7 +13,7 @@ then
   (cd $DARING_CLI_TOOLS_DIR && git-abcheck)
 fi
 
-if which direnv 2>/dev/null
+if which direnv >/dev/null 2>&1
 then
   eval "$(direnv hook bash)"
 fi
