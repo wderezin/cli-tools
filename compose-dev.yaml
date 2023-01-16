@@ -3,7 +3,8 @@ services:
     entrypoint:
     - sleep
     - infinity
-    image: docker/dev-environments-default:stable-1
+    build:
+      context: .
     init: true
     volumes:
     - type: bind
