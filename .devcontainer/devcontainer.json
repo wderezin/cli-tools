@@ -1,0 +1,13 @@
+{
+    "build": {
+        "dockerfile": "../Dockerfile",
+        "context": "..",
+        "target": "codespace"
+    },
+    "hostRequirements": {
+        "cpus": 2,
+        "storage": "32gb"
+    },
+    "waitFor": "onCreateCommand",
+    "postAttachCommand": {}
+}
