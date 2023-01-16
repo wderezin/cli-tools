@@ -7,3 +7,5 @@ FROM ghcr.io/daringway/docker-dev-env-utils:main as builder
 #     docker build -f Dockerfile -t clitools-test .
 # Test environment before commit
 #     docker run -it clitools-test bash
+
+FROM builder as developer

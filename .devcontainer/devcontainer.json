@@ -2,8 +2,9 @@
     "build": {
         "dockerfile": "../Dockerfile",
         "context": "..",
-        "target": "codespace"
+        "target": "developer"
     },
+    "remoteUser": "vscode",
     "hostRequirements": {
         "cpus": 2,
         "storage": "32gb"
