@@ -3,7 +3,7 @@
 A set of cli tools for Mac and Linux environments with a focus on the [fish shell](https://fishshell.com).  
 For non fish features bash and zsh are also supported.
 
-# Container Dotfiles Setup
+# Docker Dev Environments Dotfiles Setup
 
 Add the followig lines to your VSCode `settings.json` file.
 
@@ -13,6 +13,10 @@ On Mac: ` ~/Library/Application\ Support/Code/User/settings.json`
     "dotfiles.repository": "https://github.com/wderezin/cli-tools",
     "terminal.integrated.defaultProfile.linux": "fish",
 ```
+
+# GitHub Codespace Dotfiles
+
+Set in `https://github.com/settings/codespaces`
 
 # 1 Step Installation 
 
