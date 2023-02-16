@@ -34,7 +34,6 @@ function prompt_account
 
     # Display [venvname] if in a virtualenv
     if set -q VIRTUAL_ENV
-        echo here
         set -a acc_info $green'VENV:'(string lower (basename $VIRTUAL_ENV))$normal
     end
 
