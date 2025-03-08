@@ -37,6 +37,10 @@ if status --is-interactive
         functions -D $func >/dev/null
     end
 
+    if command -q oh-my-posh
+        oh-my-posh init fish --config $dare_cli_tools_dir/etc/daring.omp.json | source
+    end
+
     daily-check __dare_last_update_check "withd $dare_cli_tools_dir git-abcheck"
 
 end

@@ -9,6 +9,10 @@ function prompt_env
         set -e AMPLIFY_ENV
     end
 
+    if test -f $ROOTDIR/knotlove.gen.ts
+     set -a env_info (perl -ne 'if (/configuration\s*:\s*"([^"]+)"/) { print "$1\n"; exit }'  $ROOTDIR/knotlove.gen.ts )
+    end
+
     if set -q env_info
         echo -n -s '<' (string join , $env_info) '>'
         return 0

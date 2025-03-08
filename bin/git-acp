@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+
+if [ "$#" -lt 1 ]; then
+  echo "Error: No arguments provided. Please provide a commit message."
+  exit 1
+fi
+
+MESSAGE="$@"
+
+git add . && git commit -m "$MESSAGE" && git push
