@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 
-
 if [ "$#" -lt 1 ]; then
   echo "Error: No arguments provided. Please provide a commit message."
   exit 1
 fi
 
+VERIFY_FLAG=""
+if [ "$1" = "-f" ]; then
+  VERIFY_FLAG="--no-verify"
+  shift
+fi
+
 MESSAGE="$@"
 
-git add . && git commit -m "$MESSAGE" && git push
+git add . && git commit $VERIFY_FLAG -m "$MESSAGE" && git push
